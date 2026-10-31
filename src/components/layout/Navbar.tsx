@@ -88,8 +88,8 @@ export function Navbar() {
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           scrolled
-            ? 'apple-glass border-b border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)]'
-            : 'bg-[#070707]/95 backdrop-blur-xl border-b border-white/[0.08]'
+            ? 'bg-black/90 backdrop-blur-2xl border-b border-white/15 shadow-[0_10px_30px_rgba(0,0,0,0.8)]'
+            : 'bg-black/95 backdrop-blur-xl border-b border-white/[0.08]'
         }`}
       >
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -126,17 +126,35 @@ export function Navbar() {
               </Link>
             </div>
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-7">
-              {navLinks.slice(1).map((link) => {
+            {/* Center: Airbnb-Style Iconic Search Pill (Desktop / Tablet) */}
+            <div className="hidden lg:flex items-center">
+              <button
+                type="button"
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="airbnb-search-bar rounded-full py-2 px-4 flex items-center gap-3 text-xs text-white hover:border-white/40 transition-all shadow-md group cursor-pointer"
+              >
+                <span className="font-semibold text-white px-1">Any Club</span>
+                <span className="h-3 w-px bg-white/20" />
+                <span className="font-semibold text-white px-1">2024/25 Season</span>
+                <span className="h-3 w-px bg-white/20" />
+                <span className="text-zinc-400 font-normal px-1">All Sizes</span>
+                <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shrink-0 ml-1 group-hover:scale-105 transition-transform">
+                  <Search className="w-3.5 h-3.5 stroke-[2.5]" />
+                </div>
+              </button>
+            </div>
+
+            {/* Desktop Navigation Links (Compact) */}
+            <nav className="hidden md:flex lg:hidden items-center gap-6">
+              {navLinks.slice(1, 4).map((link) => {
                 const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`text-sm font-medium transition-all py-1 ${
+                    className={`text-xs font-semibold tracking-wide transition-all ${
                       isActive
-                        ? 'text-white font-bold'
+                        ? 'text-white'
                         : 'text-zinc-400 hover:text-white'
                     }`}
                   >
@@ -146,42 +164,49 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Right: Actions (Search, Admin, Cart) */}
-            <div className="flex items-center gap-1.5 sm:gap-2.5">
-              {/* Search Toggle (44px min touch target) */}
+            {/* Right: Actions (Search Toggle, Admin, Cart) */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Search Toggle for Tablet / Mobile */}
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
                 aria-label="Search jerseys"
-                className="w-11 h-11 flex items-center justify-center rounded-xl apple-glass-pill text-zinc-300 hover:text-white active:scale-95 transition-all"
+                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full airbnb-pill text-zinc-300 hover:text-white active:scale-95 transition-all"
               >
                 <Search className="w-4 h-4" />
               </button>
 
-              {/* Admin Portal Shortcut (Desktop only) */}
+              <Link
+                href="/shop"
+                className="hidden xl:inline-flex text-xs font-semibold text-zinc-300 hover:text-white px-3 py-2 rounded-full hover:bg-white/10 transition-colors"
+              >
+                All Kits
+              </Link>
+
+              {/* Admin Portal Shortcut */}
               <Link
                 href="/admin/dashboard"
                 aria-label="Admin Dashboard"
                 title="Admin Dashboard"
-                className={`apple-glass-pill px-3 py-2 rounded-xl transition-all hidden sm:flex items-center gap-1.5 text-xs font-medium ${
+                className={`airbnb-pill px-3 py-1.5 rounded-full transition-all hidden sm:flex items-center gap-1.5 text-xs font-semibold ${
                   isAdmin
-                    ? 'text-white bg-white/15 border-white/30'
+                    ? 'text-black bg-white border-white'
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                <ShieldCheck className="w-4 h-4 text-zinc-300" />
+                <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Admin</span>
               </Link>
 
-              {/* Cart Button (44px min touch target) */}
+              {/* Cart Button */}
               <button
                 onClick={() => setIsOpen(true)}
                 aria-label="Open Shopping Bag"
-                className="h-11 px-3 sm:px-3.5 rounded-xl apple-glass-pill relative flex items-center gap-1.5 text-white hover:bg-white/15 active:scale-95 transition-all group"
+                className="h-10 px-3.5 rounded-full bg-white text-black hover:bg-zinc-200 active:scale-95 transition-all flex items-center gap-2 font-bold text-xs shadow-md"
               >
-                <ShoppingBag className="w-4 h-4 text-white" />
-                <span className="hidden sm:inline text-xs font-semibold">Cart</span>
+                <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span className="hidden sm:inline">Bag</span>
                 {totalItems > 0 && (
-                  <span className="w-5 h-5 rounded-full bg-white text-black text-[11px] font-bold flex items-center justify-center font-mono">
+                  <span className="w-5 h-5 rounded-full bg-black text-white text-[10px] font-extrabold flex items-center justify-center">
                     {totalItems}
                   </span>
                 )}

@@ -154,13 +154,13 @@ export function CartDrawer() {
                 items.map((item) => (
                   <div
                     key={`${item.product.id}-${item.selectedSize}`}
-                    className="p-3 rounded-2xl apple-glass-card flex gap-3.5 group"
+                    className="p-3.5 rounded-2xl airbnb-card flex gap-3.5 group bg-[#0A0A0A]"
                   >
-                    <div className="w-20 h-22 rounded-xl bg-gradient-to-b from-[#1C1C1C] to-[#121212] relative overflow-hidden shrink-0 border border-white/10 p-1 flex items-center justify-center">
+                    <div className="w-20 h-22 rounded-xl bg-[#080808] relative overflow-hidden shrink-0 border border-white/10 p-1 flex items-center justify-center">
                       <img
                         src={item.product.images[0]}
                         alt={item.product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_8px_12px_rgba(0,0,0,0.6)]"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[0_8px_12px_rgba(0,0,0,0.8)]"
                       />
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
@@ -171,14 +171,14 @@ export function CartDrawer() {
                           </h4>
                           <button
                             onClick={() => removeItem(item.product.id, item.selectedSize)}
-                            className="text-zinc-500 hover:text-red-400 transition-colors p-1"
+                            className="text-zinc-500 hover:text-white transition-colors p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <span className="px-2 py-0.5 rounded-full apple-glass-pill text-white text-[9px] font-bold font-mono">
-                            Size: {item.selectedSize}
+                          <span className="px-2.5 py-0.5 rounded-full bg-white text-black text-[9px] font-extrabold uppercase">
+                            Size {item.selectedSize}
                           </span>
                           <span className="text-[10px] text-zinc-400">
                             {item.product.club_or_national}
@@ -187,18 +187,18 @@ export function CartDrawer() {
                       </div>
 
                       <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/[0.08]">
-                        <span className="text-xs font-bold text-white font-mono">
+                        <span className="text-xs font-extrabold text-white">
                           {formatCedis(item.product.price * item.quantity)}
                         </span>
 
-                        <div className="flex items-center gap-2 apple-glass-pill rounded-xl p-0.5">
+                        <div className="flex items-center gap-2 airbnb-pill rounded-full p-0.5 px-1.5">
                           <button
                             onClick={() => updateQuantity(item.product.id, item.selectedSize, item.quantity - 1)}
                             className="p-1 text-zinc-400 hover:text-white transition-colors"
                           >
                             <Minus className="w-3 h-3" />
                           </button>
-                          <span className="text-xs font-bold text-white px-1 font-mono">
+                          <span className="text-xs font-bold text-white px-1">
                             {item.quantity}
                           </span>
                           <button
@@ -269,21 +269,21 @@ export function CartDrawer() {
                   </div>
                 </div>
 
-                {/* Primary Checkout: Order Entire Bag on WhatsApp */}
+                {/* Primary Checkout: Order Entire Bag on WhatsApp (High-Contrast Pure White) */}
                 <button
                   onClick={handleWhatsAppOrder}
-                  className="w-full py-4 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
+                  className="w-full py-3.5 px-4 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
                 >
-                  <MessageCircle className="w-4 h-4 fill-black text-black" />
+                  <MessageCircle className="w-4 h-4 fill-emerald-600 text-emerald-600" />
                   <span>Order Entire Bag on WhatsApp</span>
                 </button>
 
                 {/* Secondary Action: Order via Snapchat */}
                 <button
                   onClick={handleSnapchatOrder}
-                  className="w-full py-3 px-4 rounded-xl apple-glass-pill hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 border border-white/10 active:scale-98"
+                  className="w-full py-3 px-4 rounded-full airbnb-pill hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 active:scale-98"
                 >
-                  {copiedSnapchat ? <Check className="w-4 h-4 text-emerald-400" /> : <Camera className="w-4 h-4 text-yellow-400" />}
+                  {copiedSnapchat ? <Check className="w-4 h-4 text-white stroke-[2.5]" /> : <Camera className="w-4 h-4 text-yellow-400" />}
                   <span>{copiedSnapchat ? 'Bag Copied! Opening Snapchat...' : 'Order Bag via Snapchat'}</span>
                 </button>
               </div>

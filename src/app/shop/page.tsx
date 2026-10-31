@@ -1,6 +1,7 @@
 import React from 'react';
 import { getProducts, getCategories } from '@/lib/store/data-service';
 import { ShopClientView } from './ShopClientView';
+import { AirbnbCategoryBar } from '@/components/ui/AirbnbCategoryBar';
 
 export const metadata = {
   title: 'All Football Jerseys | LOCKMAN JERSEYS Ghana',
@@ -22,16 +23,19 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   const categories = await getCategories();
 
   return (
-    <div className="bg-[#070707] min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="bg-black min-h-screen">
+      {/* Category Bar */}
+      <AirbnbCategoryBar activeId={searchParams.cat} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-6 sm:space-y-8">
         
         {/* Header */}
         <div className="border-b border-white/[0.08] pb-6 space-y-2">
-          <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-white">
-            All Football Jerseys
+          <h1 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">
+            Official Football Matchwear
           </h1>
           <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed">
-            Browse our full catalogue of authentic club kits, national team jerseys, and retro shirts. Fast delivery anywhere in Ghana.
+            Browse our full catalogue of authentic club kits, national team jerseys, and retro shirts. Order in 1 tap on WhatsApp or Snapchat.
           </p>
         </div>
 

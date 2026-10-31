@@ -134,13 +134,13 @@ export function ShopClientView({
         
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 stroke-[2.5]" />
           <input
             type="text"
             placeholder="Search club, team, or jersey..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-2 sm:py-2.5 bg-black/40 border border-white/10 rounded-xl text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-white/30 backdrop-blur-xl"
+            className="w-full pl-9 sm:pl-10 pr-8 sm:pr-10 py-2 sm:py-2.5 airbnb-search-bar rounded-full text-white placeholder-zinc-500 text-xs sm:text-sm focus:outline-none focus:border-white/40"
           />
           {searchQuery && (
             <button
@@ -152,32 +152,32 @@ export function ShopClientView({
           )}
         </div>
 
-        {/* Mobile Filter Sheet Button (44px touch target) */}
+        {/* Mobile Filter Sheet Button */}
         <button
           onClick={() => setMobileFilterOpen(true)}
-          className="md:hidden h-10 px-3 rounded-xl apple-glass-pill flex items-center gap-1.5 text-xs font-semibold text-white shrink-0 active:scale-95 transition-transform"
+          className="md:hidden h-10 px-3.5 rounded-full airbnb-pill flex items-center gap-1.5 text-xs font-bold text-white shrink-0 active:scale-95 transition-transform"
         >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-300" />
+          <SlidersHorizontal className="w-3.5 h-3.5 text-zinc-300 stroke-[2.5]" />
           <span>Filters</span>
           {activeFilterCount > 0 && (
-            <span className="w-4 h-4 rounded-full bg-white text-black text-[10px] font-bold flex items-center justify-center">
+            <span className="w-4 h-4 rounded-full bg-white text-black text-[10px] font-extrabold flex items-center justify-center">
               {activeFilterCount}
             </span>
           )}
         </button>
 
         {/* Desktop Sort Dropdown */}
-        <div className="hidden md:flex items-center gap-2 apple-glass-pill rounded-xl px-3 py-2">
+        <div className="hidden md:flex items-center gap-2 airbnb-pill rounded-full px-3.5 py-2">
           <ArrowUpDown className="w-3.5 h-3.5 text-zinc-400" />
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="bg-transparent text-xs text-white focus:outline-none cursor-pointer font-medium"
+            className="bg-transparent text-xs text-white focus:outline-none cursor-pointer font-bold"
           >
-            <option value="featured" className="bg-[#111111] text-white">Featured First</option>
-            <option value="price-asc" className="bg-[#111111] text-white">Price: Low to High</option>
-            <option value="price-desc" className="bg-[#111111] text-white">Price: High to Low</option>
-            <option value="newest" className="bg-[#111111] text-white">Newest First</option>
+            <option value="featured" className="bg-[#0A0A0A] text-white">Featured First</option>
+            <option value="price-asc" className="bg-[#0A0A0A] text-white">Price: Low to High</option>
+            <option value="price-desc" className="bg-[#0A0A0A] text-white">Price: High to Low</option>
+            <option value="newest" className="bg-[#0A0A0A] text-white">Newest First</option>
           </select>
         </div>
 
@@ -186,53 +186,53 @@ export function ShopClientView({
       {/* Active Filter Chips Bar (Quick Clear) */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-1.5 text-xs">
-          <span className="text-[11px] text-zinc-400 mr-1">Active:</span>
+          <span className="text-[11px] text-zinc-400 mr-1 font-semibold uppercase tracking-wider">Active:</span>
           {selectedCategory !== 'all' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px]">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-black text-[11px] font-bold">
               <span>{categories.find(c => c.id === selectedCategory)?.name || selectedCategory}</span>
-              <button onClick={() => setSelectedCategory('all')} className="hover:text-zinc-300"><X className="w-3 h-3" /></button>
+              <button onClick={() => setSelectedCategory('all')} className="hover:opacity-75"><X className="w-3 h-3 stroke-[2.5]" /></button>
             </span>
           )}
           {selectedType !== 'all' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px]">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-black text-[11px] font-bold">
               <span>{selectedType}</span>
-              <button onClick={() => setSelectedType('all')} className="hover:text-zinc-300"><X className="w-3 h-3" /></button>
+              <button onClick={() => setSelectedType('all')} className="hover:opacity-75"><X className="w-3 h-3 stroke-[2.5]" /></button>
             </span>
           )}
           {selectedSize !== 'all' && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px]">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-black text-[11px] font-bold">
               <span>Size: {selectedSize}</span>
-              <button onClick={() => setSelectedSize('all')} className="hover:text-zinc-300"><X className="w-3 h-3" /></button>
+              <button onClick={() => setSelectedSize('all')} className="hover:opacity-75"><X className="w-3 h-3 stroke-[2.5]" /></button>
             </span>
           )}
           {searchQuery && (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-white text-[11px]">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-black text-[11px] font-bold">
               <span>&ldquo;{searchQuery}&rdquo;</span>
-              <button onClick={() => setSearchQuery('')} className="hover:text-zinc-300"><X className="w-3 h-3" /></button>
+              <button onClick={() => setSearchQuery('')} className="hover:opacity-75"><X className="w-3 h-3 stroke-[2.5]" /></button>
             </span>
           )}
           <button
             onClick={clearFilters}
-            className="text-[11px] text-zinc-400 hover:text-white underline ml-1"
+            className="text-[11px] text-zinc-400 hover:text-white underline ml-1 font-bold"
           >
-            Reset
+            Reset All
           </button>
         </div>
       )}
 
       {/* Desktop Inline Filter Panel */}
-      <div className="hidden md:block space-y-4 p-5 rounded-2xl apple-glass">
+      <div className="hidden md:block space-y-4 p-5 rounded-3xl airbnb-card">
         {/* Category Row */}
         <div>
-          <span className="text-xs font-semibold text-zinc-400 block mb-2">Category</span>
+          <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider block mb-2">Category</span>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => setSelectedCategory('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
                 selectedCategory === 'all'
-                  ? 'bg-white text-black font-black shadow-glass'
-                  : 'apple-glass-pill text-zinc-400 hover:text-white'
+                  ? 'bg-white text-black shadow-md'
+                  : 'airbnb-pill text-zinc-400 hover:text-white'
               }`}
             >
               All Categories
@@ -242,10 +242,10 @@ export function ShopClientView({
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
                   selectedCategory === cat.id
-                    ? 'bg-white text-black font-black shadow-glass'
-                    : 'apple-glass-pill text-zinc-400 hover:text-white'
+                    ? 'bg-white text-black shadow-md'
+                    : 'airbnb-pill text-zinc-400 hover:text-white'
                 }`}
               >
                 {cat.name}
@@ -257,17 +257,17 @@ export function ShopClientView({
         {/* Jersey Type & Size Filters */}
         <div className="grid grid-cols-2 gap-4 pt-3 border-t border-white/[0.08]">
           <div>
-            <span className="text-xs font-semibold text-zinc-400 block mb-2">Jersey Type</span>
+            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider block mb-2">Jersey Type</span>
             <div className="flex flex-wrap gap-1.5">
               {jerseyTypes.map((t) => (
                 <button
                   key={t}
                   type="button"
                   onClick={() => setSelectedType(t)}
-                  className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                  className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                     selectedType === t
-                      ? 'bg-white text-black font-bold'
-                      : 'apple-glass-pill text-zinc-400 hover:text-white'
+                      ? 'bg-white text-black shadow-md'
+                      : 'airbnb-pill text-zinc-400 hover:text-white'
                   }`}
                 >
                   {t === 'all' ? 'All Types' : t}
@@ -277,15 +277,15 @@ export function ShopClientView({
           </div>
 
           <div>
-            <span className="text-xs font-semibold text-zinc-400 block mb-2">Available Sizes</span>
+            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider block mb-2">Available Sizes</span>
             <div className="flex flex-wrap gap-1.5">
               <button
                 type="button"
                 onClick={() => setSelectedSize('all')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all ${
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                   selectedSize === 'all'
-                    ? 'bg-white text-black font-black'
-                    : 'apple-glass-pill text-zinc-400 hover:text-white'
+                    ? 'bg-white text-black shadow-md'
+                    : 'airbnb-pill text-zinc-400 hover:text-white'
                 }`}
               >
                 Any
@@ -295,10 +295,10 @@ export function ShopClientView({
                   key={s}
                   type="button"
                   onClick={() => setSelectedSize(s)}
-                  className={`min-w-8 py-1 px-2.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`min-w-8 py-1 px-3 rounded-full text-xs font-bold transition-all ${
                     selectedSize === s
-                      ? 'bg-white text-black font-black'
-                      : 'apple-glass-pill text-zinc-400 hover:text-white'
+                      ? 'bg-white text-black shadow-md'
+                      : 'airbnb-pill text-zinc-400 hover:text-white'
                   }`}
                 >
                   {s}

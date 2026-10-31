@@ -54,27 +54,27 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="group relative apple-glass-card rounded-2xl overflow-hidden flex flex-col justify-between transition-all duration-300 hover:border-white/25 active:border-white/30">
+      <div className="group relative airbnb-card rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between transition-all duration-300">
         
         {/* Product Image Frame */}
         <Link 
           href={`/product/${product.slug}`}
-          className="relative aspect-square bg-gradient-to-b from-[#181818] to-[#0E0E0E] overflow-hidden block p-3 sm:p-5 flex items-center justify-center"
+          className="relative aspect-square bg-[#080808] overflow-hidden block p-4 sm:p-6 flex items-center justify-center border-b border-white/[0.06]"
         >
           <img
             src={product.images[0]}
             alt={product.name}
             loading="lazy"
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 ease-out drop-shadow-[0_10px_20px_rgba(0,0,0,0.7)]"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 ease-out drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)]"
           />
 
-          {/* Single Clean Badge */}
+          {/* Airbnb-style Badge */}
           {badgeText && (
-            <div className="absolute top-2.5 left-2.5 z-10">
-              <span className={`px-2 py-0.5 rounded-full text-[9px] sm:text-[11px] font-semibold tracking-wide ${
+            <div className="absolute top-3 left-3 z-10">
+              <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold tracking-wider uppercase ${
                 badgeText === 'Sold Out'
                   ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-                  : 'apple-glass-pill text-white'
+                  : 'bg-white text-black shadow-md'
               }`}>
                 {badgeText}
               </span>
@@ -83,42 +83,43 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
 
         {/* Product Details */}
-        <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-3.5">
+        <div className="p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-3">
           <div>
             {/* Club and Season */}
-            <div className="flex items-center justify-between text-[10px] sm:text-xs text-zinc-400 mb-0.5">
-              <span className="font-medium text-zinc-300 truncate max-w-[70%]">
+            <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+              <span className="font-semibold text-zinc-300 tracking-wide uppercase truncate max-w-[75%]">
                 {product.club_or_national}
               </span>
-              <span className="text-[10px] text-zinc-500 font-mono shrink-0">{product.season}</span>
+              <span className="text-[11px] text-zinc-500 font-medium shrink-0">{product.season}</span>
             </div>
 
             {/* Product Title */}
             <Link href={`/product/${product.slug}`} className="block">
-              <h3 className="font-heading text-xs sm:text-sm font-bold text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
+              <h3 className="font-sans text-sm sm:text-[15px] font-bold text-white group-hover:text-zinc-200 transition-colors line-clamp-1">
                 {product.name}
               </h3>
             </Link>
 
-            {/* Price */}
-            <div className="mt-1 sm:mt-1.5 flex items-baseline gap-1.5">
-              <span className="text-xs sm:text-base font-bold text-white font-mono">
+            {/* Price (Airbnb Style) */}
+            <div className="mt-2 flex items-baseline gap-1.5">
+              <span className="text-sm sm:text-base font-extrabold text-white">
                 {formatCedis(product.price)}
               </span>
+              <span className="text-xs text-zinc-400 font-normal">/ jersey</span>
               {product.original_price && (
-                <span className="text-[10px] sm:text-xs text-zinc-500 line-through font-mono">
+                <span className="text-xs text-zinc-500 line-through ml-1">
                   {formatCedis(product.original_price)}
                 </span>
               )}
             </div>
 
-            {/* Desktop Size Selector (Hidden on mobile to prevent overcrowding) */}
-            <div className="hidden sm:block mt-3">
-              <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
-                <span>Size:</span>
+            {/* Quick Size Selector Pills */}
+            <div className="mt-3 pt-2.5 border-t border-white/[0.08]">
+              <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1.5">
+                <span className="font-medium">Size</span>
                 <span className="text-white font-bold">{selectedSize}</span>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
                 {product.sizes.map((s) => {
                   const isSelected = selectedSize === s.size;
                   const isOut = s.stock === 0;
@@ -127,13 +128,17 @@ export function ProductCard({ product }: ProductCardProps) {
                       key={s.size}
                       type="button"
                       disabled={isOut}
-                      onClick={() => setSelectedSize(s.size)}
-                      className={`flex-1 py-1 rounded-lg text-xs font-semibold transition-all ${
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedSize(s.size);
+                      }}
+                      className={`h-7 px-2.5 rounded-lg text-xs font-bold transition-all ${
                         isSelected
-                          ? 'bg-white text-black font-bold shadow-[0_0_10px_rgba(255,255,255,0.3)]'
+                          ? 'bg-white text-black shadow-sm'
                           : isOut
                           ? 'text-zinc-600 bg-white/[0.02] cursor-not-allowed line-through'
-                          : 'border border-white/10 text-zinc-300 hover:border-white/30 bg-white/[0.04]'
+                          : 'border border-white/15 text-zinc-300 hover:border-white/40 bg-white/[0.04]'
                       }`}
                     >
                       {s.size}
@@ -144,35 +149,13 @@ export function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
-          {/* Action Buttons: Responsive for Mobile (44px min touch target) & Desktop */}
-          <div className="pt-2 sm:pt-3 border-t border-white/[0.08]">
-            
-            {/* Mobile View Product Bar (Comfortable 44px touch target) */}
-            <div className="sm:hidden flex items-center gap-1.5">
+          {/* Action Buttons: Responsive for Mobile & Desktop */}
+          <div className="pt-2 border-t border-white/[0.08]">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={handleOpenWhatsApp}
-                aria-label={`Order ${product.name} on WhatsApp`}
-                className="w-11 h-11 rounded-xl apple-glass-pill flex items-center justify-center text-emerald-400 shrink-0 active:scale-95 transition-transform"
-              >
-                <MessageCircle className="w-4 h-4 fill-current" />
-              </button>
-
-              <Link
-                href={`/product/${product.slug}`}
-                className="flex-1 h-11 px-3 rounded-xl bg-white text-black text-xs font-bold flex items-center justify-center gap-1 hover:bg-zinc-200 active:scale-95 transition-all shadow-glass"
-              >
-                <span>View</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-
-            {/* Desktop Action Buttons */}
-            <div className="hidden sm:grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={handleOpenWhatsApp}
-                className="apple-glass-pill py-2.5 px-3 rounded-xl text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/15"
+                className="airbnb-pill py-2.5 px-3 rounded-xl text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/10 active:scale-95"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-400" />
                 <span>WhatsApp</span>
@@ -182,29 +165,29 @@ export function ProductCard({ product }: ProductCardProps) {
                 type="button"
                 disabled={isOutOfStock || isCurrentSizeOut}
                 onClick={handleAddToCart}
-                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-glass ${
+                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
                   added
                     ? 'bg-zinc-200 text-black'
                     : isOutOfStock || isCurrentSizeOut
                     ? 'bg-white/5 text-zinc-600 cursor-not-allowed border border-white/5'
-                    : 'bg-white hover:bg-zinc-200 text-black'
+                    : 'bg-white hover:bg-zinc-200 text-black shadow-sm'
                 }`}
               >
                 {added ? (
                   <>
-                    <Check className="w-4 h-4" />
+                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
                     <span>Added</span>
                   </>
                 ) : (
                   <>
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>Add to Bag</span>
+                    <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <span>Add</span>
                   </>
                 )}
               </button>
             </div>
-
           </div>
+
         </div>
 
       </div>

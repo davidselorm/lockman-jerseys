@@ -17,7 +17,7 @@ export function Footer() {
   const snapchatUsername = storeSettings?.snapchat_username || '';
 
   return (
-    <footer className="bg-[#0A0A0A] border-t border-white/10 text-zinc-400 text-xs pt-12 pb-10">
+    <footer className="bg-black border-t border-white/10 text-zinc-400 text-xs pt-12 pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Footer Columns */}
@@ -26,7 +26,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/15 overflow-hidden flex items-center justify-center shrink-0 p-0.5">
+              <div className="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/15 overflow-hidden flex items-center justify-center shrink-0 p-0.5">
                 <img
                   src="/images/brand/logo.png"
                   alt="LOCKMAN JERSEYS"
@@ -34,17 +34,17 @@ export function Footer() {
                 />
               </div>
               <div>
-                <span className="font-heading text-base font-extrabold tracking-wider text-white block uppercase">
-                  LOCKMAN <span className="text-zinc-400 font-semibold">JERSEYS</span>
+                <span className="font-sans text-base font-extrabold tracking-wider text-white block uppercase">
+                  LOCKMAN <span className="text-zinc-400 font-bold">JERSEYS</span>
                 </span>
-                <span className="text-[10px] tracking-wider text-zinc-400 uppercase block font-medium">
-                  Football Store · Ghana
+                <span className="text-[10px] tracking-wider text-zinc-400 uppercase block font-semibold">
+                  Accra · Ghana
                 </span>
               </div>
             </div>
 
             <p className="text-xs leading-relaxed text-zinc-400 max-w-sm">
-              Your trusted store for authentic football kits, player version jerseys, and retro shirts in Ghana.
+              Your trusted store for authentic football matchwear, player version jerseys, and retro classics across Ghana.
             </p>
 
             <div className="pt-1 flex items-center gap-3">
@@ -53,10 +53,10 @@ export function Footer() {
                   href={buildWhatsAppUrl(whatsappNumber, 'Hello Lockman Jerseys, I would like to order a jersey.')}
                   target="_blank"
                   rel="noreferrer"
-                  className="apple-glass-pill px-3 py-1.5 rounded-full text-white hover:text-zinc-200 transition-colors flex items-center gap-1.5 text-xs font-semibold"
+                  className="airbnb-pill px-3.5 py-1.5 rounded-full text-white hover:text-zinc-200 transition-colors flex items-center gap-1.5 text-xs font-bold"
                 >
-                  <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>WhatsApp</span>
+                  <MessageCircle className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
+                  <span>WhatsApp Concierge</span>
                   <ArrowUpRight className="w-3 h-3 text-zinc-400" />
                 </a>
               )}
@@ -66,7 +66,7 @@ export function Footer() {
                   href={buildSnapchatUrl(snapchatUsername)}
                   target="_blank"
                   rel="noreferrer"
-                  className="apple-glass-pill px-3 py-1.5 rounded-full text-white hover:text-zinc-200 transition-colors flex items-center gap-1.5 text-xs font-semibold"
+                  className="airbnb-pill px-3.5 py-1.5 rounded-full text-white hover:text-zinc-200 transition-colors flex items-center gap-1.5 text-xs font-bold"
                 >
                   <Camera className="w-3.5 h-3.5 text-yellow-300" />
                   <span>Snapchat</span>
