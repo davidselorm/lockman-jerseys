@@ -6,25 +6,19 @@ import { usePathname } from 'next/navigation';
 import { 
   ShoppingBag, 
   Search, 
-  Menu, 
-  X, 
   ShieldCheck, 
-  ArrowRight,
-  Flame,
-  Shirt,
-  Grid,
-  Info,
-  PhoneCall,
-  MessageCircle,
+  Flame, 
+  Shirt, 
+  Grid, 
+  Info, 
+  PhoneCall, 
   Home
 } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
-import { buildWhatsAppUrl } from '@/lib/utils';
 
 export function Navbar() {
   const pathname = usePathname();
   const { totalItems, setIsOpen, storeSettings } = useCart();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,20 +33,7 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
-
-  useEffect(() => {
-    setMobileMenuOpen(false);
     setSearchOpen(false);
   }, [pathname]);
 
@@ -95,19 +76,9 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-15 sm:h-16 md:h-20">
             
-            {/* Left: Mobile Drawer Toggle & Logo */}
+            {/* Left: Brand Logo & Name */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Elegant Mobile Hamburger Button (44px min touch target) */}
-              <button
-                onClick={() => setMobileMenuOpen(true)}
-                aria-label="Open navigation menu"
-                className="md:hidden w-11 h-11 flex items-center justify-center rounded-xl apple-glass-pill text-white active:scale-95 transition-transform"
-              >
-                <Menu className="w-5 h-5 text-white" />
-              </button>
-
-              {/* Brand Logo & Name */}
-              <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
+              <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
                 <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-white/[0.05] border border-white/15 overflow-hidden flex items-center justify-center group-hover:border-white/40 transition-all shrink-0">
                   <img
                     src="/images/brand/logo.png"
@@ -240,147 +211,6 @@ export function Navbar() {
           </div>
         )}
       </header>
-
-      {/* ========================================================
-          POLISHED SLIDE-OUT MOBILE NAVIGATION DRAWER
-          ======================================================== */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          {/* Dark Glass Backdrop with fade */}
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-300"
-            aria-hidden="true"
-          />
-
-          {/* Slide-out Drawer Panel */}
-          <div className="fixed inset-y-0 left-0 w-[82vw] max-w-sm bg-[#0E0E0E] border-r border-white/10 shadow-2xl flex flex-col justify-between overflow-y-auto animate-in slide-in-from-left duration-300">
-            
-            {/* Drawer Header */}
-            <div>
-              <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/15 overflow-hidden flex items-center justify-center p-0.5">
-                    <img
-                      src="/images/brand/logo.png"
-                      alt="LOCKMAN JERSEYS"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div>
-                    <span className="font-heading text-sm font-extrabold tracking-wider text-white uppercase block leading-none">
-                      LOCKMAN <span className="text-zinc-400 font-semibold">JERSEYS</span>
-                    </span>
-                    <span className="text-[9px] text-zinc-400 uppercase tracking-widest block mt-0.5">
-                      Football Store · Ghana
-                    </span>
-                  </div>
-                </div>
-
-                {/* 44px Close Button */}
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  aria-label="Close navigation drawer"
-                  className="w-10 h-10 rounded-xl apple-glass-pill flex items-center justify-center text-zinc-400 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Navigation Links List */}
-              <div className="p-4 space-y-1">
-                {navLinks.map((link) => {
-                  const Icon = link.icon;
-                  const isActive = pathname === link.href;
-                  return (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center justify-between p-3.5 rounded-xl text-sm font-medium transition-all ${
-                        isActive
-                          ? 'bg-white text-black font-bold shadow-glass'
-                          : 'text-zinc-300 hover:bg-white/5 hover:text-white active:bg-white/10'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Icon className={`w-4 h-4 ${isActive ? 'text-black' : 'text-zinc-400'}`} />
-                        <span>{link.name}</span>
-                      </div>
-                      <ArrowRight className={`w-4 h-4 ${isActive ? 'text-black' : 'text-zinc-500'}`} />
-                    </Link>
-                  );
-                })}
-              </div>
-
-              {/* Quick Categories Bar in Drawer */}
-              <div className="px-4 pt-2">
-                <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2 px-1">
-                  Popular Clubs
-                </span>
-                <div className="grid grid-cols-2 gap-2">
-                  <Link
-                    href="/shop?q=Ghana"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-zinc-300 hover:text-white"
-                  >
-                    🇬🇭 Black Stars
-                  </Link>
-                  <Link
-                    href="/shop?q=Real%20Madrid"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-zinc-300 hover:text-white"
-                  >
-                    ⚪ Real Madrid
-                  </Link>
-                  <Link
-                    href="/shop?q=Arsenal"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-zinc-300 hover:text-white"
-                  >
-                    🔴 Arsenal
-                  </Link>
-                  <Link
-                    href="/shop?q=Barcelona"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2.5 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-zinc-300 hover:text-white"
-                  >
-                    🔵 Barcelona
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Drawer Bottom Actions: Admin & WhatsApp */}
-            <div className="p-4 border-t border-white/10 space-y-2.5 bg-black/40">
-              {whatsappNumber && (
-                <a
-                  href={buildWhatsAppUrl(whatsappNumber, 'Hello Lockman Jerseys, I need assistance with an order.')}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full py-3 px-4 rounded-xl apple-glass-pill hover:bg-white/10 text-white text-xs font-semibold flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4 text-emerald-400" />
-                  <span>Chat with Concierge</span>
-                </a>
-              )}
-
-              <Link
-                href="/admin/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-zinc-400 hover:text-white flex items-center justify-between"
-              >
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-zinc-400" />
-                  <span>Admin Dashboard</span>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
-              </Link>
-            </div>
-
-          </div>
-        </div>
-      )}
     </>
   );
 }
