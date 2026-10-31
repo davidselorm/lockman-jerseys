@@ -6,7 +6,7 @@ export const INITIAL_CATEGORIES: Category[] = [
     name: 'Club Jerseys',
     slug: 'club-jerseys',
     description: 'Official 2024/25 match and fan kits from elite European and international football clubs.',
-    image_url: 'https://assets.adidas.com/images/w_600,f_auto,q_auto/a4f3b5c777d04f2f9872b16100ee2ebf_9366/Real_Madrid_24-25_Home_Jersey_White_IU5011_01_laydown.jpg',
+    image_url: 'https://assets.adidas.com/images/w_600,f_auto,q_auto/3308086a783f43b2a6b309b13c693f71_9366/IU5013_HM1.jpg',
     badge: 'Popular',
     item_count: 7,
   },
@@ -60,7 +60,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     is_popular: true,
     is_available: true,
     images: [
-      'https://assets.adidas.com/images/w_600,f_auto,q_auto/a4f3b5c777d04f2f9872b16100ee2ebf_9366/Real_Madrid_24-25_Home_Jersey_White_IU5011_01_laydown.jpg',
+      'https://assets.adidas.com/images/w_600,f_auto,q_auto/3308086a783f43b2a6b309b13c693f71_9366/IU5013_HM1.jpg',
     ],
     sizes: [
       { size: 'S', stock: 10 },

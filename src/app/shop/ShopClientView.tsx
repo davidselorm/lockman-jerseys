@@ -65,7 +65,40 @@ export function ShopClientView({
     }
 
     if (selectedCategory !== 'all') {
-      result = result.filter(p => p.category_id === selectedCategory);
+      const catLower = selectedCategory.toLowerCase();
+      result = result.filter(p => {
+        // Direct category ID match
+        if (p.category_id === selectedCategory) return true;
+        
+        // Match against category slug
+        const catObj = categories.find(c => c.id === p.category_id || c.slug === p.category_id);
+        if (catObj && (catObj.slug === catLower || catObj.id === catLower)) return true;
+
+        // Semantic league & collection mapping for quick discovery
+        if (catLower === 'premier-league') {
+          const plClubs = ['arsenal', 'chelsea', 'manchester', 'liverpool', 'tottenham', 'city', 'united'];
+          return plClubs.some(club => p.club_or_national.toLowerCase().includes(club) || p.name.toLowerCase().includes(club)) || p.description.toLowerCase().includes('premier league');
+        }
+        if (catLower === 'la-liga') {
+          const laLigaClubs = ['real madrid', 'barcelona', 'atletico', 'valencia', 'sevilla'];
+          return laLigaClubs.some(club => p.club_or_national.toLowerCase().includes(club) || p.name.toLowerCase().includes(club)) || p.description.toLowerCase().includes('la liga');
+        }
+        if (catLower === 'national-teams') {
+          const nations = ['ghana', 'argentina', 'france', 'brazil', 'portugal', 'england', 'germany', 'black stars'];
+          return p.category_id === 'cat-2' || (catObj && catObj.slug === 'national-teams') || nations.some(n => p.club_or_national.toLowerCase().includes(n) || p.name.toLowerCase().includes(n));
+        }
+        if (catLower === 'champions-league') {
+          return p.description.toLowerCase().includes('champions league') || p.category_id === 'cat-1';
+        }
+        if (catLower === 'retro' || catLower === 'retro-classics') {
+          return p.jersey_type === 'Retro' || p.category_id === 'cat-3';
+        }
+        if (catLower === 'player-issue' || catLower === 'player-version') {
+          return p.jersey_type === 'Player Version' || p.category_id === 'cat-4';
+        }
+
+        return false;
+      });
     }
 
     if (selectedType !== 'all') {
@@ -189,7 +222,18 @@ export function ShopClientView({
           <span className="text-[11px] text-zinc-400 mr-1 font-semibold uppercase tracking-wider">Active:</span>
           {selectedCategory !== 'all' && (
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white text-black text-[11px] font-bold">
-              <span>{categories.find(c => c.id === selectedCategory)?.name || selectedCategory}</span>
+              <span>
+                {categories.find(c => c.id === selectedCategory || c.slug === selectedCategory)?.name ||
+                  (selectedCategory === 'premier-league'
+                    ? 'Premier League'
+                    : selectedCategory === 'la-liga'
+                    ? 'La Liga'
+                    : selectedCategory === 'national-teams'
+                    ? 'Black Stars & Africa'
+                    : selectedCategory === 'champions-league'
+                    ? 'UCL Nights'
+                    : selectedCategory)}
+              </span>
               <button onClick={() => setSelectedCategory('all')} className="hover:opacity-75"><X className="w-3 h-3 stroke-[2.5]" /></button>
             </span>
           )}

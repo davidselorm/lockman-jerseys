@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: ProductPageProps) {
 
   return {
     title: `${product.name} | LOCKMAN JERSEYS Ghana`,
-    description: `Buy ${product.name} (${product.season}) for GH₵ ${product.price}. Available in Accra with express nationwide Ghana delivery and Mobile Money payment.`,
+    description: `Buy ${product.name} (${product.season}) for GH₵ ${product.price}. Available in Accra with express nationwide Ghana delivery and instant WhatsApp or Snapchat ordering.`,
   };
 }
 

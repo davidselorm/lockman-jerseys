@@ -39,7 +39,7 @@ export function OrderWhatsAppModal({
 
   const handleSend = () => {
     if (!phoneNumber) {
-      alert('The WhatsApp ordering hotline is being configured by the administrator in the Admin Dashboard. Please checkout using Mobile Money.');
+      alert('The WhatsApp ordering hotline is currently being configured by the store administrator. Please contact us on Snapchat or visit our contact page.');
       return;
     }
     const url = buildWhatsAppUrl(phoneNumber, previewMessage);
