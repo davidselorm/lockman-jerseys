@@ -22,7 +22,9 @@ import {
   Check, 
   Save,
   MessageCircle,
-  Camera
+  Camera,
+  RefreshCw,
+  Server
 } from 'lucide-react';
 import { Product, Category, Order, StoreSettings, JerseySize, JerseyType } from '@/types';
 import { formatCedis } from '@/lib/utils';
@@ -88,6 +90,67 @@ export function AdminDashboardClient({
   ]);
 
   const [uploadingImage, setUploadingImage] = useState(false);
+
+  // Database Tab State
+  const [dbStatus, setDbStatus] = useState<{
+    connected?: boolean;
+    tablesReady?: boolean;
+    productCount?: number;
+    orderCount?: number;
+    database?: string;
+    host?: string;
+    error?: string;
+    message?: string;
+  } | null>(null);
+  const [dbLoading, setDbLoading] = useState(false);
+  const [dbMigrating, setDbMigrating] = useState(false);
+  const [dbMigrationLogs, setDbMigrationLogs] = useState<string[]>([]);
+
+  const fetchDatabaseStatus = async () => {
+    setDbLoading(true);
+    try {
+      const res = await fetch('/api/admin/setup-db');
+      const data = await res.json();
+      setDbStatus(data);
+    } catch (err: any) {
+      setDbStatus({ connected: false, error: err.message });
+    } finally {
+      setDbLoading(false);
+    }
+  };
+
+  const handleRunMigration = async () => {
+    if (!confirm('This will execute the PostgreSQL schema, create all missing tables, and seed initial jerseys if empty. Continue?')) {
+      return;
+    }
+
+    setDbMigrating(true);
+    setDbMigrationLogs(['Initiating database migration...']);
+    try {
+      const res = await fetch('/api/admin/setup-db', { method: 'POST' });
+      const data = await res.json();
+      if (data.logs) {
+        setDbMigrationLogs(data.logs);
+      }
+      if (data.success) {
+        setDbMigrationLogs(prev => [...prev, '✓ Database schema and seed completed successfully!']);
+        await fetchDatabaseStatus();
+        router.refresh();
+      } else {
+        setDbMigrationLogs(prev => [...prev, `❌ Error: ${data.error || 'Migration failed'}`]);
+      }
+    } catch (err: any) {
+      setDbMigrationLogs(prev => [...prev, `❌ Network error: ${err.message}`]);
+    } finally {
+      setDbMigrating(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (activeTab === 'database' && !dbStatus && !dbLoading) {
+      fetchDatabaseStatus();
+    }
+  }, [activeTab]);
 
   const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1108,20 +1171,90 @@ export function AdminDashboardClient({
         {/* ========================================================= */}
         {activeTab === 'database' && (
           <div className="space-y-6">
-            <div className="p-6 rounded-xl bg-[#121212] border border-[#262626] space-y-4">
-              <div className="flex items-center gap-2 text-[#FFFFFF]">
-                <Database className="w-4 h-4" />
-                <h3 className="text-sm font-bold text-[#F1F0E9] uppercase tracking-wider font-mono">
-                  Supabase PostgreSQL Architecture
-                </h3>
+            {/* Status Card */}
+            <div className="p-6 rounded-xl bg-[#121212] border border-[#262626] space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-[#FFFFFF]">
+                  <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                    <Database className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-[#F1F0E9] uppercase tracking-wider font-mono">
+                      Supabase PostgreSQL Status
+                    </h3>
+                    <p className="text-xs text-[#A5ADA7]">
+                      Cloud database connected via Vercel integration
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={fetchDatabaseStatus}
+                    disabled={dbLoading}
+                    className="px-3 py-1.5 rounded-lg border border-[#262626] text-xs font-mono text-[#A5ADA7] hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${dbLoading ? 'animate-spin' : ''}`} />
+                    <span>Refresh</span>
+                  </button>
+
+                  <button
+                    onClick={handleRunMigration}
+                    disabled={dbMigrating}
+                    className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs font-mono transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
+                  >
+                    <Server className={`w-3.5 h-3.5 ${dbMigrating ? 'animate-spin' : ''}`} />
+                    <span>{dbMigrating ? 'Running Migration...' : 'Initialize / Migrate Schema'}</span>
+                  </button>
+                </div>
               </div>
-              <p className="text-xs text-[#A5ADA7] leading-relaxed">
-                The database schema is fully defined at <code className="text-[#FFFFFF] font-mono">supabase/schema.sql</code> including Row Level Security (RLS) policies for products, inventory, orders, and payment records.
-              </p>
-              <div className="p-4 rounded-lg bg-[#070707] border border-[#262626] text-xs text-[#A5ADA7] space-y-1">
-                <span className="font-bold text-[#F1F0E9] block font-mono">Production Integration:</span>
-                <p>
-                  To attach a live Supabase database, set <code className="text-[#FFFFFF]">NEXT_PUBLIC_SUPABASE_URL</code> and <code className="text-[#FFFFFF]">NEXT_PUBLIC_SUPABASE_ANON_KEY</code> in your environment variables.
+
+              {/* Status details */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+                <div className="p-4 rounded-lg bg-[#070707] border border-[#262626]">
+                  <span className="text-[11px] text-[#A5ADA7] font-mono block">Connection</span>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${dbStatus?.connected ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                    <span className="text-sm font-mono font-bold text-white">
+                      {dbLoading ? 'Checking...' : dbStatus?.connected ? 'Connected' : 'Pending Migration'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-lg bg-[#070707] border border-[#262626]">
+                  <span className="text-[11px] text-[#A5ADA7] font-mono block">Tables Ready</span>
+                  <span className="mt-1 block text-sm font-mono font-bold text-white">
+                    {dbLoading ? '...' : dbStatus?.tablesReady ? 'Yes (All 8 Tables)' : 'Not Yet Migrated'}
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-lg bg-[#070707] border border-[#262626]">
+                  <span className="text-[11px] text-[#A5ADA7] font-mono block">Products in Cloud DB</span>
+                  <span className="mt-1 block text-sm font-mono font-bold text-white">
+                    {dbLoading ? '...' : dbStatus?.productCount !== undefined ? `${dbStatus.productCount} items` : '0 items'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Migration logs panel */}
+              {dbMigrationLogs.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-[11px] font-mono text-zinc-400 block">Migration Output:</span>
+                  <div className="p-4 rounded-lg bg-black border border-white/10 font-mono text-xs text-zinc-300 space-y-1 max-h-48 overflow-y-auto">
+                    {dbMigrationLogs.map((log, index) => (
+                      <div key={index} className="flex items-center gap-2">
+                        <span className="text-emerald-400">›</span>
+                        <span>{log}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="p-4 rounded-lg bg-[#070707] border border-[#262626] text-xs text-[#A5ADA7] space-y-2">
+                <span className="font-bold text-[#F1F0E9] block font-mono">Architecture Notes:</span>
+                <p className="leading-relaxed">
+                  Your Supabase credentials are synchronized automatically from Vercel. Clicking <strong>Initialize / Migrate Schema</strong> runs the complete SQL schema (<code className="text-white">supabase/schema.sql</code>), enables Row Level Security (RLS), sets up image storage buckets, and seeds your initial jersey catalogue with per-size stocks.
                 </p>
               </div>
             </div>
