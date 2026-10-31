@@ -56,10 +56,10 @@ export function MobileDock() {
     },
     {
       label: 'Bag',
+      href: '/cart',
       icon: ShoppingBag,
-      isActive: false,
-      isButton: true,
-      onClick: () => setIsOpen(true),
+      isActive: pathname === '/cart',
+      isButton: false,
       badge: totalItems,
     },
     {

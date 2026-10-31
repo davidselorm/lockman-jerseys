@@ -3,7 +3,6 @@ import './globals.css';
 import { CartProvider } from '@/lib/store/cart-context';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { CartDrawer } from '@/components/layout/CartDrawer';
 import { WhatsAppFloatingButton } from '@/components/layout/WhatsAppFloatingButton';
 import { MobileDock } from '@/components/layout/MobileDock';
 
@@ -29,7 +28,6 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-1 pb-24 md:pb-0">{children}</main>
           <Footer />
-          <CartDrawer />
           <MobileDock />
           <WhatsAppFloatingButton />
         </CartProvider>

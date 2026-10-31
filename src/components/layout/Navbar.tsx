@@ -168,10 +168,10 @@ export function Navbar() {
                 <span>Admin</span>
               </Link>
 
-              {/* Cart Button */}
-              <button
-                onClick={() => setIsOpen(true)}
-                aria-label="Open Shopping Bag"
+              {/* Cart Bag Link */}
+              <Link
+                href="/cart"
+                aria-label="View Shopping Bag"
                 className="h-10 px-3.5 rounded-full bg-white text-black hover:bg-zinc-200 active:scale-95 transition-all flex items-center gap-2 font-bold text-xs shadow-md"
               >
                 <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -181,7 +181,7 @@ export function Navbar() {
                     {totalItems}
                   </span>
                 )}
-              </button>
+              </Link>
             </div>
           </div>
         </div>
