@@ -110,7 +110,14 @@ export function AdminDashboardClient({
     setDbLoading(true);
     try {
       const res = await fetch('/api/admin/setup-db');
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        setDbStatus({ connected: false, error: `HTTP ${res.status}: ${text.slice(0, 80)}` });
+        return;
+      }
       setDbStatus(data);
     } catch (err: any) {
       setDbStatus({ connected: false, error: err.message });
@@ -128,8 +135,16 @@ export function AdminDashboardClient({
     setDbMigrationLogs(['Initiating database migration...']);
     try {
       const res = await fetch('/api/admin/setup-db', { method: 'POST' });
-      const data = await res.json();
-      if (data.logs) {
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        setDbMigrationLogs(prev => [...prev, `❌ Server response error (HTTP ${res.status}): ${text.slice(0, 100)}`]);
+        return;
+      }
+
+      if (data.logs && Array.isArray(data.logs)) {
         setDbMigrationLogs(data.logs);
       }
       if (data.success) {
@@ -140,7 +155,7 @@ export function AdminDashboardClient({
         setDbMigrationLogs(prev => [...prev, `❌ Error: ${data.error || 'Migration failed'}`]);
       }
     } catch (err: any) {
-      setDbMigrationLogs(prev => [...prev, `❌ Network error: ${err.message}`]);
+      setDbMigrationLogs(prev => [...prev, `❌ Error: ${err.message}`]);
     } finally {
       setDbMigrating(false);
     }
