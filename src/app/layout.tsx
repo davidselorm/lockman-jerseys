@@ -8,8 +8,8 @@ import { WhatsAppFloatingButton } from '@/components/layout/WhatsAppFloatingButt
 
 export const metadata: Metadata = {
   title: 'LOCKMAN JERSEYS | Football Jerseys in Ghana',
-  description: 'Buy authentic football club jerseys, national team kits, and retro classics. Fast delivery across Ghana with Mobile Money or WhatsApp ordering.',
-  keywords: 'football jerseys ghana, black stars jersey, accra football shirts, buy jerseys in ghana, real madrid jersey accra, arsenal jersey accra, momo payment jerseys',
+  description: 'Buy authentic football club jerseys, national team kits, and retro classics. Fast delivery across Ghana with instant WhatsApp and Snapchat ordering.',
+  keywords: 'football jerseys ghana, black stars jersey, accra football shirts, buy jerseys in ghana, real madrid jersey accra, arsenal jersey accra, whatsapp jersey order ghana',
   icons: {
     icon: '/images/brand/logo.png',
     apple: '/images/brand/logo.png',

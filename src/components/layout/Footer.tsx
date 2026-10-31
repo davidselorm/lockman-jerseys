@@ -139,23 +139,25 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Payment Methods */}
+          {/* Ordering Channels */}
           <div className="md:col-span-3 space-y-3">
             <h4 className="font-heading text-white text-xs font-bold uppercase tracking-wider">
-              Mobile Money Payments
+              Concierge Ordering
             </h4>
             <p className="text-[11px] text-zinc-400 leading-relaxed">
-              We accept instant payments via all major networks in Ghana:
+              Order directly via our official Ghanaian concierge channels:
             </p>
             <div className="pt-1 flex flex-wrap gap-2">
-              <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-white">
-                MTN MoMo
+              <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-emerald-400 flex items-center gap-1.5 border border-emerald-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                WhatsApp Hotline
               </span>
-              <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-white">
-                Telecel Cash
+              <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-yellow-400 flex items-center gap-1.5 border border-yellow-500/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                Snapchat Boutique
               </span>
-              <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-white">
-                AT Money
+              <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-zinc-300">
+                Accra Showroom Pickup
               </span>
             </div>
           </div>

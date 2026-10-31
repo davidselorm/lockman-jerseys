@@ -81,7 +81,7 @@ export function Navbar() {
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
         <span className="truncate">Quality football jerseys • Delivery across Ghana</span>
         <span className="text-zinc-600 hidden md:inline">•</span>
-        <span className="hidden md:inline text-white font-medium">Mobile Money Accepted</span>
+        <span className="hidden md:inline text-white font-medium">Order via WhatsApp & Snapchat</span>
       </div>
 
       {/* Main Header (Compact 60px on mobile, 76px on desktop) */}

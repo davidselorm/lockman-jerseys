@@ -18,7 +18,6 @@ import { useCart } from '@/lib/store/cart-context';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { OrderWhatsAppModal } from '@/components/product/OrderWhatsAppModal';
 import { OrderSnapchatModal } from '@/components/product/OrderSnapchatModal';
-import { MoMoCheckoutModal } from '@/components/checkout/MoMoCheckoutModal';
 
 interface ProductDetailClientProps {
   product: Product;
@@ -39,7 +38,6 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
   // Modals
   const [whatsappModalOpen, setWhatsappModalOpen] = useState(false);
   const [snapchatModalOpen, setSnapchatModalOpen] = useState(false);
-  const [momoModalOpen, setMomoModalOpen] = useState(false);
 
   const currentSizeObj = product.sizes.find(s => s.size === selectedSize);
   const currentStock = currentSizeObj?.stock || 0;
@@ -215,35 +213,25 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
             {/* Order Actions (Desktop/Tablet & In-Page) */}
             <div className="space-y-2.5 sm:space-y-3 pt-2">
               
-              {/* WhatsApp Checkout */}
+              {/* Primary Action: WhatsApp Checkout */}
               <button
                 type="button"
                 onClick={() => setWhatsappModalOpen(true)}
-                className="w-full h-12 px-5 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shadow-glass active:scale-98"
+                className="w-full h-12 px-5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-600" />
+                <MessageCircle className="w-4 h-4 fill-black text-black" />
                 <span>Order on WhatsApp (GH₵ {totalPrice.toFixed(2)})</span>
               </button>
 
-              {/* MoMo Checkout */}
-              <button
-                type="button"
-                onClick={() => setMomoModalOpen(true)}
-                className="w-full h-12 px-5 rounded-xl apple-glass-pill hover:bg-white/10 text-white font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 active:scale-98"
-              >
-                <CreditCard className="w-4 h-4 text-zinc-300" />
-                <span>Pay with Mobile Money (MoMo)</span>
-              </button>
-
-              {/* Secondary Options */}
+              {/* Secondary Options: Snapchat & Add to Bag */}
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setSnapchatModalOpen(true)}
-                  className="h-11 px-3 sm:px-4 rounded-xl apple-glass-pill hover:bg-white/10 text-white text-xs font-medium transition-all flex items-center justify-center gap-1.5 active:scale-95"
+                  className="h-11 px-3 sm:px-4 rounded-xl apple-glass-pill hover:bg-white/10 text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 active:scale-95 border border-white/10"
                 >
-                  <Camera className="w-4 h-4 text-yellow-300" />
-                  <span>Snapchat</span>
+                  <Camera className="w-4 h-4 text-yellow-400" />
+                  <span>Snapchat Order</span>
                 </button>
 
                 <button
@@ -261,7 +249,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                   {addedToCart ? (
                     <>
                       <Check className="w-4 h-4" />
-                      <span>Added</span>
+                      <span>Added to Bag</span>
                     </>
                   ) : (
                     <>
@@ -394,21 +382,6 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
           selectedSize={selectedSize}
           isOpen={snapchatModalOpen}
           onClose={() => setSnapchatModalOpen(false)}
-        />
-      )}
-
-      {/* Direct MoMo Modal */}
-      {momoModalOpen && (
-        <MoMoCheckoutModal
-          isOpen={momoModalOpen}
-          onClose={() => setMomoModalOpen(false)}
-          onSuccess={() => setMomoModalOpen(false)}
-          directProduct={{
-            product,
-            size: selectedSize,
-            quantity,
-            totalAmount: totalPrice,
-          }}
         />
       )}
     </div>

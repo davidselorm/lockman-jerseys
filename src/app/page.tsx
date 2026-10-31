@@ -8,7 +8,8 @@ import {
   MessageCircle,
   ChevronRight,
   Flame,
-  Sparkles
+  Sparkles,
+  Camera
 } from 'lucide-react';
 import { getProducts, getCategories, getStoreSettings } from '@/lib/store/data-service';
 import { ProductCard } from '@/components/ui/ProductCard';
@@ -47,7 +48,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="text-sm sm:text-base lg:text-lg text-zinc-400 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-                Official club kits, national shirts, and retro classics. Instant checkout via Mobile Money or WhatsApp, with fast delivery anywhere in Ghana.
+                Official club kits, national shirts, and retro classics. 1-Click concierge ordering on WhatsApp or Snapchat with fast delivery anywhere in Ghana.
               </p>
 
               {/* Action Buttons (Full width on mobile, auto on desktop with min 44px height) */}
@@ -145,11 +146,11 @@ export default async function HomePage() {
 
           <div className="p-3.5 sm:p-5 rounded-2xl apple-glass flex flex-col sm:flex-row items-start gap-2.5 sm:gap-3.5">
             <div className="p-2 sm:p-2.5 rounded-xl apple-glass-pill text-white shrink-0">
-              <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-zinc-200" />
+              <Camera className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" />
             </div>
             <div>
-              <h4 className="font-heading text-xs sm:text-sm font-bold text-white">Mobile Money</h4>
-              <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 sm:mt-1">MTN MoMo, Telecel Cash & AT.</p>
+              <h4 className="font-heading text-xs sm:text-sm font-bold text-white">Snapchat Boutique</h4>
+              <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 sm:mt-1">DM order code for rapid confirmation.</p>
             </div>
           </div>
 

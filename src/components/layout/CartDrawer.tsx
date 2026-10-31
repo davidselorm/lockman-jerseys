@@ -10,12 +10,10 @@ import {
   MessageCircle, 
   Camera, 
   Check, 
-  Truck,
-  CreditCard 
+  Truck
 } from 'lucide-react';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
-import { MoMoCheckoutModal } from '@/components/checkout/MoMoCheckoutModal';
 
 export function CartDrawer() {
   const { 
@@ -33,7 +31,6 @@ export function CartDrawer() {
     storeSettings
   } = useCart();
 
-  const [momoModalOpen, setMomoModalOpen] = useState(false);
   const [copiedSnapchat, setCopiedSnapchat] = useState(false);
 
   if (!isOpen) return null;
@@ -46,7 +43,7 @@ export function CartDrawer() {
     if (items.length === 0) return;
     const phone = storeSettings?.whatsapp_number || '';
     if (!phone) {
-      alert('WhatsApp ordering number is currently being configured by the administrator. Please checkout via Mobile Money or check back shortly.');
+      alert('WhatsApp ordering hotline is currently being configured by the administrator in the Admin Dashboard. Please check back shortly.');
       return;
     }
     let msg = `🔥 *ORDER INQUIRY - LOCKMAN JERSEYS*\n\n`;
@@ -56,7 +53,7 @@ export function CartDrawer() {
     msg += `\n*Subtotal:* GH₵ ${subtotal.toFixed(2)}`;
     msg += `\n*Delivery Location:* ${deliveryCity} (GH₵ ${deliveryFee.toFixed(2)})`;
     msg += `\n*Total:* GH₵ ${total.toFixed(2)}`;
-    msg += `\n\nPlease confirm availability and payment details.`;
+    msg += `\n\nPlease confirm availability and dispatch schedule.`;
 
     window.open(buildWhatsAppUrl(phone, msg), '_blank');
   };
@@ -272,51 +269,28 @@ export function CartDrawer() {
                   </div>
                 </div>
 
-                {/* Primary Checkout: Ghana Mobile Money */}
+                {/* Primary Checkout: Order Entire Bag on WhatsApp */}
                 <button
-                  onClick={() => setMomoModalOpen(true)}
-                  className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-glass"
+                  onClick={handleWhatsAppOrder}
+                  className="w-full py-4 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
                 >
-                  <CreditCard className="w-4 h-4 text-black" />
-                  <span>Pay with Mobile Money (MoMo)</span>
+                  <MessageCircle className="w-4 h-4 fill-black text-black" />
+                  <span>Order Entire Bag on WhatsApp</span>
                 </button>
 
-                {/* Secondary Actions */}
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    onClick={handleWhatsAppOrder}
-                    className="apple-glass-pill py-2.5 px-3 rounded-xl text-white text-xs font-bold transition-all flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 text-zinc-300" />
-                    <span>WhatsApp</span>
-                  </button>
-
-                  <button
-                    onClick={handleSnapchatOrder}
-                    className="apple-glass-pill py-2.5 px-3 rounded-xl text-white text-xs font-bold transition-all flex items-center justify-center gap-2"
-                  >
-                    {copiedSnapchat ? <Check className="w-3.5 h-3.5" /> : <Camera className="w-3.5 h-3.5 text-zinc-300" />}
-                    <span>{copiedSnapchat ? 'Copied' : 'Snapchat'}</span>
-                  </button>
-                </div>
+                {/* Secondary Action: Order via Snapchat */}
+                <button
+                  onClick={handleSnapchatOrder}
+                  className="w-full py-3 px-4 rounded-xl apple-glass-pill hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 border border-white/10 active:scale-98"
+                >
+                  {copiedSnapchat ? <Check className="w-4 h-4 text-emerald-400" /> : <Camera className="w-4 h-4 text-yellow-400" />}
+                  <span>{copiedSnapchat ? 'Bag Copied! Opening Snapchat...' : 'Order Bag via Snapchat'}</span>
+                </button>
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* MoMo Checkout Modal */}
-      {momoModalOpen && (
-        <MoMoCheckoutModal
-          isOpen={momoModalOpen}
-          onClose={() => setMomoModalOpen(false)}
-          onSuccess={() => {
-            clearCart();
-            setMomoModalOpen(false);
-            setIsOpen(false);
-          }}
-        />
-      )}
     </>
   );
 }

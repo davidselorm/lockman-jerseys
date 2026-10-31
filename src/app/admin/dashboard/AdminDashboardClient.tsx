@@ -54,7 +54,7 @@ export function AdminDashboardClient({
 }: AdminDashboardClientProps) {
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'payments' | 'settings' | 'database'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'settings' | 'database'>('overview');
   
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
@@ -412,7 +412,6 @@ export function AdminDashboardClient({
             { id: 'overview', label: 'Overview & Alerts', icon: LayoutDashboard },
             { id: 'products', label: `Inventory (${products.length})`, icon: Package },
             { id: 'orders', label: `Orders (${orders.length})`, icon: ShoppingBag },
-            { id: 'payments', label: `MoMo Verifications (${orders.filter(o => o.payment?.status === 'submitted').length})`, icon: CreditCard },
             { id: 'settings', label: 'Store Settings', icon: Settings },
             { id: 'database', label: 'Database & SQL', icon: Database },
           ].map((tab) => {
@@ -449,17 +448,17 @@ export function AdminDashboardClient({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="p-6 rounded-xl bg-[#121212] border border-[#262626] space-y-1">
                 <span className="text-[10px] font-bold text-[#A5ADA7] uppercase tracking-[0.2em] block font-mono">
-                  Confirmed Revenue
+                  Order Volume
                 </span>
                 <span className="text-2xl font-bold text-[#FFFFFF] font-mono">
                   {formatCedis(
                     orders
-                      .filter(o => o.payment?.status === 'confirmed')
+                      .filter(o => o.order_status !== 'cancelled')
                       .reduce((sum, o) => sum + o.total_amount, 0)
                   )}
                 </span>
                 <span className="text-xs text-[#A5ADA7] block pt-1">
-                  Reconciled MoMo orders
+                  Active order requests
                 </span>
               </div>
 
@@ -489,13 +488,13 @@ export function AdminDashboardClient({
 
               <div className="p-6 rounded-xl bg-[#121212] border border-[#262626] space-y-1">
                 <span className="text-[10px] font-bold text-[#A5ADA7] uppercase tracking-[0.2em] block font-mono">
-                  Awaiting Verification
+                  Pending Orders
                 </span>
                 <span className="text-2xl font-bold text-amber-400 font-mono">
-                  {orders.filter(o => o.payment?.status === 'submitted').length}
+                  {orders.filter(o => o.order_status === 'pending').length}
                 </span>
                 <span className="text-xs text-[#A5ADA7] block pt-1">
-                  MoMo transactions to review
+                  Orders to dispatch / process
                 </span>
               </div>
             </div>
@@ -858,115 +857,7 @@ export function AdminDashboardClient({
         )}
 
         {/* ========================================================= */}
-        {/* TAB 4: MOMO VERIFICATION */}
-        {/* ========================================================= */}
-        {activeTab === 'payments' && (
-          <div className="space-y-6">
-            <div className="p-4 rounded-xl bg-[#121212] border border-[#262626] text-xs text-[#A5ADA7] leading-relaxed">
-              <p>
-                <strong>Reconciliation Standard:</strong> Confirm incoming Mobile Money SMS or merchant portal transactions before approving delivery dispatch.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {orders
-                .filter(o => o.payment)
-                .map(order => {
-                  const pay = order.payment!;
-                  const isSubmitted = pay.status === 'submitted' || pay.status === 'pending';
-                  return (
-                    <div key={order.id} className="p-6 rounded-xl bg-[#121212] border border-[#262626] space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#262626] pb-3">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-bold font-mono text-[#F1F0E9]">
-                            Order {order.order_number}
-                          </span>
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase border ${
-                            pay.status === 'confirmed'
-                              ? 'bg-[#181818] text-[#FFFFFF] border-[#262626]'
-                              : pay.status === 'rejected'
-                              ? 'bg-red-950/60 text-red-300 border-red-800'
-                              : 'bg-amber-950/60 text-amber-400 border-amber-800'
-                          }`}>
-                            {pay.status}
-                          </span>
-                        </div>
-                        <span className="text-base font-bold font-mono text-[#FFFFFF]">
-                          {formatCedis(pay.amount)}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                        <div>
-                          <span className="text-[10px] text-[#A5ADA7] uppercase block font-bold font-mono">Reference ID</span>
-                          <span className="text-[#F1F0E9] font-mono font-bold text-xs bg-[#070707] px-2 py-1 rounded border border-[#262626] inline-block mt-1">
-                            {pay.payment_reference}
-                          </span>
-                        </div>
-
-                        <div>
-                          <span className="text-[10px] text-[#A5ADA7] uppercase block font-bold font-mono">Customer</span>
-                          <p className="text-[#F1F0E9] font-bold">{order.customer_name}</p>
-                          <p className="text-[#A5ADA7] font-mono">{order.customer_phone}</p>
-                        </div>
-
-                        <div>
-                          <span className="text-[10px] text-[#A5ADA7] uppercase block font-bold font-mono">Provider & Time</span>
-                          <p className="text-[#F1F0E9] uppercase font-mono">{pay.payment_method}</p>
-                          <p className="text-[#A5ADA7]">{new Date(pay.created_at).toLocaleString()}</p>
-                        </div>
-                      </div>
-
-                      {pay.proof_image_url && (
-                        <div className="p-3 rounded-lg bg-[#070707] border border-[#262626] flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-xs">
-                            <Camera className="w-4 h-4 text-[#FFFFFF]" />
-                            <span className="text-[#F1F0E9]">Attached Transfer Screenshot</span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setSelectedProofOrder(order)}
-                            className="px-3 py-1 rounded bg-[#181818] text-[#FFFFFF] text-xs font-bold hover:bg-[#262626] border border-[#262626]"
-                          >
-                            View Screenshot
-                          </button>
-                        </div>
-                      )}
-
-                      <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-[#262626]">
-                        <span className="text-xs text-[#A5ADA7]">
-                          {pay.verified_by ? `Reconciled by ${pay.verified_by} (${pay.notes || 'Approved'})` : 'Pending administrator check'}
-                        </span>
-
-                        {isSubmitted && (
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => handleVerifyPayment(order.id, 'confirmed')}
-                              className="px-4 py-2 rounded-lg bg-[#FFFFFF] hover:bg-[#E5E5E5] text-[#070707] text-xs font-black uppercase tracking-wider flex items-center gap-1.5"
-                            >
-                              <CheckCircle className="w-3.5 h-3.5" />
-                              <span>Confirm Payment</span>
-                            </button>
-                            <button
-                              onClick={() => handleVerifyPayment(order.id, 'rejected')}
-                              className="px-4 py-2 rounded-lg bg-red-900/60 hover:bg-red-900 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"
-                            >
-                              <XCircle className="w-3.5 h-3.5" />
-                              <span>Reject</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-
-          </div>
-        )}
-
-        {/* ========================================================= */}
-        {/* TAB 5: STORE SETTINGS (Configurable Business Information) */}
+        {/* TAB 4: STORE SETTINGS (Configurable Business Information) */}
         {/* ========================================================= */}
         {activeTab === 'settings' && (
           <form onSubmit={handleSaveSettings} className="space-y-6">
@@ -1050,88 +941,6 @@ export function AdminDashboardClient({
                   onChange={(e) => setSettings({ ...settings, snapchat_username: e.target.value })}
                   className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
                 />
-              </div>
-            </div>
-
-            {/* Mobile Money Accounts */}
-            <div className="p-6 rounded-xl bg-[#121212] border border-[#262626] space-y-4">
-              <div className="flex items-center gap-2 text-[#FFFFFF]">
-                <CreditCard className="w-4 h-4" />
-                <h3 className="text-sm font-bold text-[#F1F0E9] uppercase tracking-wider font-mono">
-                  Ghana Mobile Money Merchant Accounts
-                </h3>
-              </div>
-
-              {/* MTN */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[11px] text-[#A5ADA7] block mb-1 font-mono">MTN MoMo Number</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 024..."
-                    value={settings.mtn_momo_number}
-                    onChange={(e) => setSettings({ ...settings, mtn_momo_number: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] text-[#A5ADA7] block mb-1 font-mono">MTN Account Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Lockman Jerseys"
-                    value={settings.mtn_momo_name}
-                    onChange={(e) => setSettings({ ...settings, mtn_momo_name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
-                  />
-                </div>
-              </div>
-
-              {/* Telecel */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div>
-                  <label className="text-[11px] text-[#A5ADA7] block mb-1 font-mono">Telecel Cash Number</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 020..."
-                    value={settings.telecel_cash_number}
-                    onChange={(e) => setSettings({ ...settings, telecel_cash_number: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] text-[#A5ADA7] block mb-1 font-mono">Telecel Account Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Lockman Jerseys"
-                    value={settings.telecel_cash_name}
-                    onChange={(e) => setSettings({ ...settings, telecel_cash_name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
-                  />
-                </div>
-              </div>
-
-              {/* AT */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div>
-                  <label className="text-[11px] text-[#A5ADA7] block mb-1 font-mono">AT Money Number</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 026..."
-                    value={settings.at_money_number}
-                    onChange={(e) => setSettings({ ...settings, at_money_number: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] text-[#A5ADA7] block mb-1 font-mono">AT Account Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Lockman Jerseys"
-                    value={settings.at_money_name}
-                    onChange={(e) => setSettings({ ...settings, at_money_name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[#070707] border border-[#262626] rounded-lg text-[#F1F0E9] text-xs font-mono focus:outline-none focus:border-[#FFFFFF]"
-                  />
-                </div>
               </div>
             </div>
 
