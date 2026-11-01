@@ -56,7 +56,7 @@ export async function POST(request: Request) {
         await supabase.from('payment_records').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('products').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        await supabase.from('categories').update({ image_url: null }).neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('categories').update({ image_url: '' }).neq('id', '00000000-0000-0000-0000-000000000000');
         logs.push('Cleared products and reset category images in Supabase tables.');
       }
     } catch (e: any) {
@@ -70,11 +70,15 @@ export async function POST(request: Request) {
     try {
       const client = await pool.connect();
       try {
-        await client.query(`
-          TRUNCATE TABLE public.product_images, public.product_sizes, public.order_items, public.payment_records, public.orders, public.products CASCADE;
-          UPDATE public.categories SET image_url = NULL;
-        `);
+        await client.query('TRUNCATE TABLE public.product_images, public.product_sizes, public.order_items, public.payment_records, public.orders, public.products CASCADE;');
         logs.push('Executed TRUNCATE CASCADE on PostgreSQL tables.');
+
+        try {
+          await client.query("UPDATE public.categories SET image_url = '';");
+          logs.push('Reset category images in PostgreSQL.');
+        } catch (catErr: any) {
+          logs.push(`Category image reset note: ${catErr.message}`);
+        }
       } finally {
         client.release();
       }

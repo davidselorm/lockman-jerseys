@@ -170,6 +170,27 @@ const DUMMY_KIT_IDS = new Set([
   'prod-mancity-player-2425',
 ]);
 
+const DUMMY_SLUGS = new Set([
+  'real-madrid-2024-25-home-jersey',
+  'arsenal-2024-25-home-cannon-kit',
+  'ghana-black-stars-2024-25-home-jersey',
+  'barcelona-2024-25-anniversary-home-jersey',
+  'manchester-city-2024-25-0161-home-jersey',
+  'bayern-munich-2024-25-triple-red-home-jersey',
+  'chelsea-2024-25-blue-flame-home-jersey',
+  'liverpool-2024-25-retro-collar-home-jersey',
+  'paris-saint-germain-2024-25-brushstroke-home-jersey',
+  'juventus-2024-25-lunar-craters-home-jersey',
+  'inter-milan-2024-25-two-star-champions-home-jersey',
+  'barcelona-2024-25-stealth-black-away-jersey',
+  'ghana-black-stars-2024-25-away-kente-gold-jersey',
+  'argentina-1994-away-world-cup-maradona-retro-jersey',
+  'arsenal-2003-04-invincibles-o2-home-retro-jersey',
+  'real-madrid-2024-25-third-monogram-champions-league-jersey',
+  'arsenal-2024-25-authentic-matchday-player-version-away-jersey',
+  'manchester-city-2024-25-authentic-player-issue-home-jersey'
+]);
+
 export async function getProducts(filters?: {
   category?: string;
   jerseyType?: string;
@@ -237,8 +258,8 @@ export async function getProducts(filters?: {
     products = getStored<Product[]>(STORAGE_KEY_PRODUCTS, memoryProducts);
   }
 
-  // Purge any lingering dummy seed kits
-  products = products.filter(p => !DUMMY_KIT_IDS.has(p.id) && !p.id.startsWith('prod-rm-') && !p.id.startsWith('prod-arsenal-') && !p.id.startsWith('prod-ghana-') && !p.id.startsWith('prod-barca-') && !p.id.startsWith('prod-mancity-') && !p.id.startsWith('prod-chelsea-') && !p.id.startsWith('prod-liverpool-'));
+  // Purge any lingering dummy seed kits (by slug and by mock id)
+  products = products.filter(p => !DUMMY_SLUGS.has(p.slug) && !DUMMY_KIT_IDS.has(p.id) && !p.id.startsWith('prod-rm-') && !p.id.startsWith('prod-arsenal-') && !p.id.startsWith('prod-ghana-') && !p.id.startsWith('prod-barca-') && !p.id.startsWith('prod-mancity-') && !p.id.startsWith('prod-chelsea-') && !p.id.startsWith('prod-liverpool-'));
 
   // Filter & Search
   if (filters?.query) {
