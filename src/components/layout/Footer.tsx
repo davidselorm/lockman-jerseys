@@ -131,11 +131,6 @@ export function Footer() {
                   Name & Number Printing
                 </Link>
               </li>
-              <li>
-                <Link href="/admin/login" className="text-zinc-400 hover:text-white transition-colors">
-                  Admin Login
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -175,9 +170,6 @@ export function Footer() {
             </Link>
             <Link href="/contact" className="hover:text-white transition-colors">
               Delivery Info
-            </Link>
-            <Link href="/admin/login" className="hover:text-white transition-colors">
-              Admin
             </Link>
           </div>
         </div>

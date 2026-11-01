@@ -153,21 +153,6 @@ export function Navbar() {
                 All Kits
               </Link>
 
-              {/* Admin Portal Shortcut */}
-              <Link
-                href="/admin/dashboard"
-                aria-label="Admin Dashboard"
-                title="Admin Dashboard"
-                className={`airbnb-pill px-3 py-1.5 rounded-full transition-all hidden sm:flex items-center gap-1.5 text-xs font-semibold ${
-                  isAdmin
-                    ? 'text-black bg-white border-white'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Admin</span>
-              </Link>
-
               {/* Cart Bag Link */}
               <Link
                 href="/cart"
