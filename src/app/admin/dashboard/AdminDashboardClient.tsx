@@ -204,15 +204,37 @@ export function AdminDashboardClient({
   };
 
   React.useEffect(() => {
+    // Client-side active session guard
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/admin/session', { cache: 'no-store' });
+        if (!res.ok) {
+          localStorage.removeItem('lockman_admin_authed');
+          window.location.replace('/admin/login');
+        }
+      } catch {
+        window.location.replace('/admin/login');
+      }
+    };
+    checkAuth();
+  }, []);
+
+  React.useEffect(() => {
     if (activeTab === 'database' && !dbStatus && !dbLoading) {
       fetchDatabaseStatus();
     }
   }, [activeTab]);
 
   const handleLogout = async () => {
-    await fetch('/api/admin/logout', { method: 'POST' });
+    try {
+      await fetch('/api/admin/logout', { method: 'POST', cache: 'no-store' });
+    } catch (e) {
+      console.warn('Logout fetch warning:', e);
+    }
     localStorage.removeItem('lockman_admin_authed');
-    router.push('/admin/login');
+    // Clear cookie from client side as well
+    document.cookie = 'lockman_admin_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    window.location.replace('/admin/login');
   };
 
   // ========================================================
