@@ -3,6 +3,8 @@ import { getProducts, getCategories } from '@/lib/store/data-service';
 import { ShopClientView } from './ShopClientView';
 import { AirbnbCategoryBar } from '@/components/ui/AirbnbCategoryBar';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'All Football Jerseys | LOCKMAN JERSEYS Ghana',
   description: 'Shop football club jerseys, national team kits, player versions, and retro shirts in Ghana Cedis (GH₵).',

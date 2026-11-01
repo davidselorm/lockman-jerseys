@@ -148,6 +148,28 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 // PRODUCTS & INVENTORY
 // ==========================================
 
+const DUMMY_KIT_IDS = new Set([
+  'prod-rm-home-2425',
+  'prod-arsenal-home-2425',
+  'prod-ghana-home-2425',
+  'prod-barca-home-2425',
+  'prod-barca-away-2425',
+  'prod-mancity-home-2425',
+  'prod-chelsea-home-2425',
+  'prod-liverpool-home-2425',
+  'prod-bayern-home-2425',
+  'prod-psg-home-2425',
+  'prod-juve-home-2425',
+  'prod-inter-home-2425',
+  'prod-dortmund-home-2425',
+  'prod-milan-home-2425',
+  'prod-portugal-home-2425',
+  'prod-argentina-retro-94',
+  'prod-arsenal-invincibles-retro',
+  'prod-rm-away-orange-2425',
+  'prod-mancity-player-2425',
+]);
+
 export async function getProducts(filters?: {
   category?: string;
   jerseyType?: string;
@@ -214,6 +236,9 @@ export async function getProducts(filters?: {
   if (products.length === 0) {
     products = getStored<Product[]>(STORAGE_KEY_PRODUCTS, memoryProducts);
   }
+
+  // Purge any lingering dummy seed kits
+  products = products.filter(p => !DUMMY_KIT_IDS.has(p.id) && !p.id.startsWith('prod-rm-') && !p.id.startsWith('prod-arsenal-') && !p.id.startsWith('prod-ghana-') && !p.id.startsWith('prod-barca-') && !p.id.startsWith('prod-mancity-') && !p.id.startsWith('prod-chelsea-') && !p.id.startsWith('prod-liverpool-'));
 
   // Filter & Search
   if (filters?.query) {

@@ -5,18 +5,20 @@ import {
   ShieldCheck, 
   Truck, 
   CreditCard, 
-  MessageCircle,
-  ChevronRight,
-  Flame,
-  Sparkles,
-  Camera,
-  Search,
-  CheckCircle2
+  MessageCircle, 
+  ChevronRight, 
+  Flame, 
+  Sparkles, 
+  Camera, 
+  Search, 
+  CheckCircle2 
 } from 'lucide-react';
 import { getProducts, getCategories, getStoreSettings } from '@/lib/store/data-service';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { AirbnbCategoryBar } from '@/components/ui/AirbnbCategoryBar';
-import { buildWhatsAppUrl } from '@/lib/utils';
+import { buildWhatsAppUrl, formatCedis } from '@/lib/utils';
+
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [products, categories, storeSettings] = await Promise.all([
@@ -115,30 +117,54 @@ export default async function HomePage() {
               <div className="relative mx-auto max-w-[320px] sm:max-w-md lg:max-w-none">
                 <div className="relative rounded-3xl overflow-hidden airbnb-card p-4 sm:p-6 bg-gradient-to-b from-[#141414] to-[#0A0A0A]">
                   
-                  <div className="aspect-square flex items-center justify-center overflow-hidden">
-                    <img
-                      src="https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600,t_white_blk_50/global/783419/01/mod01/fnd/EEA/fmt/png/Ghana-2026-Home-Jersey-Men"
-                      alt="Ghana Black Stars 2024/25 Home Jersey"
-                      className="w-full h-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
-                    />
-                  </div>
+                  {products.length > 0 && products[0]?.images?.[0] ? (
+                    <>
+                      <div className="aspect-square flex items-center justify-center overflow-hidden">
+                        <img
+                          src={products[0].images[0]}
+                          alt={products[0].name}
+                          className="w-full h-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
+                        />
+                      </div>
 
-                  <div className="mt-4 p-3.5 rounded-2xl airbnb-pill flex items-center justify-between">
-                    <div>
-                      <span className="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider block">
-                        Ghana Black Stars
-                      </span>
-                      <h3 className="font-sans text-xs sm:text-sm font-extrabold text-white">2024/25 Home Matchwear</h3>
-                      <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block">GH₵ 450 <span className="text-zinc-400 font-normal text-xs">/ jersey</span></span>
+                      <div className="mt-4 p-3.5 rounded-2xl airbnb-pill flex items-center justify-between">
+                        <div className="min-w-0 pr-2">
+                          <span className="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider block truncate">
+                            {products[0].club_or_national}
+                          </span>
+                          <h3 className="font-sans text-xs sm:text-sm font-extrabold text-white truncate">{products[0].name}</h3>
+                          <span className="text-xs sm:text-sm font-extrabold text-white mt-0.5 block">{formatCedis(products[0].price)} <span className="text-zinc-400 font-normal text-xs">/ jersey</span></span>
+                        </div>
+                        <Link
+                          href={`/product/${products[0].slug}`}
+                          className="h-9 px-4 rounded-full bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors shadow-md flex items-center gap-1 active:scale-95 shrink-0"
+                        >
+                          <span>Order</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="aspect-square flex flex-col items-center justify-center text-center p-6 space-y-4">
+                      <div className="w-16 h-16 rounded-3xl bg-white/5 border border-white/10 flex items-center justify-center text-white">
+                        <Sparkles className="w-8 h-8 text-white" />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400 block">Official Matchwear</span>
+                        <h3 className="text-base font-extrabold text-white">2024/25 Season Drops</h3>
+                        <p className="text-xs text-zinc-400 max-w-xs mx-auto">
+                          Player issues, club shirts & national kits. Prepared fresh for the upcoming drop.
+                        </p>
+                      </div>
+                      <Link
+                        href="/shop"
+                        className="px-5 py-2.5 rounded-full bg-white text-black text-xs font-extrabold hover:bg-zinc-200 transition-all shadow-md inline-block"
+                      >
+                        Explore Vault
+                      </Link>
                     </div>
-                    <Link
-                      href="/product/ghana-black-stars-2024-25-home-jersey"
-                      className="h-9 px-4 rounded-full bg-white text-black text-xs font-bold hover:bg-zinc-200 transition-colors shadow-md flex items-center gap-1 active:scale-95"
-                    >
-                      <span>Order</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
+                  )}
+
                 </div>
               </div>
             </div>
