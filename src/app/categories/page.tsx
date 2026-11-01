@@ -3,6 +3,10 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { getCategories, getProducts } from '@/lib/store/data-service';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Categories | LOCKMAN JERSEYS Ghana',
   description: 'Browse our jersey collections: Club Kits, National Teams, Retro Classics, and Player Versions.',

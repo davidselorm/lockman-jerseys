@@ -16,10 +16,10 @@ import {
 } from './seed-data';
 import { createClient, createAdminClient, isSupabaseConfigured } from '@/lib/supabase/client';
 
-const STORAGE_KEY_PRODUCTS = 'lockman_products_v5';
-const STORAGE_KEY_CATEGORIES = 'lockman_categories_v5';
-const STORAGE_KEY_SETTINGS = 'lockman_settings_v5';
-const STORAGE_KEY_ORDERS = 'lockman_orders_v5';
+const STORAGE_KEY_PRODUCTS = 'lockman_products_v6';
+const STORAGE_KEY_CATEGORIES = 'lockman_categories_v6';
+const STORAGE_KEY_SETTINGS = 'lockman_settings_v6';
+const STORAGE_KEY_ORDERS = 'lockman_orders_v6';
 
 // In-memory singletons for fallback or SSR initial state
 let memoryProducts: Product[] = [...INITIAL_PRODUCTS];
@@ -28,6 +28,18 @@ let memorySettings: StoreSettings = { ...INITIAL_STORE_SETTINGS };
 let memoryOrders: Order[] = [...INITIAL_ORDERS];
 
 const isBrowser = typeof window !== 'undefined';
+
+// Wipe obsolete mock data caches from client browser storage
+if (isBrowser) {
+  try {
+    for (let i = 1; i <= 5; i++) {
+      localStorage.removeItem(`lockman_products_v${i}`);
+      localStorage.removeItem(`lockman_categories_v${i}`);
+      localStorage.removeItem(`lockman_settings_v${i}`);
+      localStorage.removeItem(`lockman_orders_v${i}`);
+    }
+  } catch {}
+}
 
 function getStored<T>(key: string, fallback: T): T {
   if (!isBrowser) return fallback;
@@ -125,7 +137,7 @@ export async function getCategories(): Promise<Category[]> {
             name: c.name,
             slug: c.slug,
             description: c.description || '',
-            image_url: c.image_url,
+            image_url: '', // Production clean slate: no dummy photos for category cards
             badge: c.badge || undefined,
             item_count: c.item_count || 0,
           }));
@@ -172,24 +184,54 @@ const DUMMY_KIT_IDS = new Set([
 
 const DUMMY_SLUGS = new Set([
   'real-madrid-2024-25-home-jersey',
+  'real-madrid-2024-25-away-jersey',
+  'real-madrid-2024-25-authentic-heat-rdy-player-issue-third-jersey',
+  'real-madrid-2024-25-third-monogram-champions-league-jersey',
   'arsenal-2024-25-home-cannon-kit',
+  'arsenal-2024-25-authentic-matchday-player-version-away-jersey',
+  'arsenal-2003-04-invincibles-o2-home-retro-jersey',
   'ghana-black-stars-2024-25-home-jersey',
+  'ghana-black-stars-2024-25-away-kente-gold-jersey',
   'barcelona-2024-25-anniversary-home-jersey',
+  'barcelona-2024-25-stealth-black-away-jersey',
   'manchester-city-2024-25-0161-home-jersey',
+  'manchester-city-2024-25-authentic-player-issue-home-jersey',
   'bayern-munich-2024-25-triple-red-home-jersey',
   'chelsea-2024-25-blue-flame-home-jersey',
   'liverpool-2024-25-retro-collar-home-jersey',
   'paris-saint-germain-2024-25-brushstroke-home-jersey',
   'juventus-2024-25-lunar-craters-home-jersey',
   'inter-milan-2024-25-two-star-champions-home-jersey',
-  'barcelona-2024-25-stealth-black-away-jersey',
-  'ghana-black-stars-2024-25-away-kente-gold-jersey',
-  'argentina-1994-away-world-cup-maradona-retro-jersey',
-  'arsenal-2003-04-invincibles-o2-home-retro-jersey',
-  'real-madrid-2024-25-third-monogram-champions-league-jersey',
-  'arsenal-2024-25-authentic-matchday-player-version-away-jersey',
-  'manchester-city-2024-25-authentic-player-issue-home-jersey'
+  'argentina-1994-away-jersey',
+  'argentina-1994-away-world-cup-maradona-retro-jersey'
 ]);
+
+export function isMockProduct(p: Product): boolean {
+  if (!p) return true;
+  if (DUMMY_SLUGS.has(p.slug)) return true;
+  if (DUMMY_KIT_IDS.has(p.id)) return true;
+  if (
+    p.id.startsWith('prod-rm-') ||
+    p.id.startsWith('prod-arsenal-') ||
+    p.id.startsWith('prod-ghana-') ||
+    p.id.startsWith('prod-barca-') ||
+    p.id.startsWith('prod-mancity-') ||
+    p.id.startsWith('prod-chelsea-') ||
+    p.id.startsWith('prod-liverpool-') ||
+    p.id.startsWith('prod-bayern-') ||
+    p.id.startsWith('prod-psg-') ||
+    p.id.startsWith('prod-juve-')
+  ) {
+    return true;
+  }
+  // Drop any kit whose images point to external seed assets
+  if (Array.isArray(p.images) && p.images.some(img => 
+    typeof img === 'string' && (img.includes('assets.adidas.com') || img.includes('images.puma.com') || img.includes('placeholder'))
+  )) {
+    return true;
+  }
+  return false;
+}
 
 export async function getProducts(filters?: {
   category?: string;
@@ -258,8 +300,8 @@ export async function getProducts(filters?: {
     products = getStored<Product[]>(STORAGE_KEY_PRODUCTS, memoryProducts);
   }
 
-  // Purge any lingering dummy seed kits (by slug and by mock id)
-  products = products.filter(p => !DUMMY_SLUGS.has(p.slug) && !DUMMY_KIT_IDS.has(p.id) && !p.id.startsWith('prod-rm-') && !p.id.startsWith('prod-arsenal-') && !p.id.startsWith('prod-ghana-') && !p.id.startsWith('prod-barca-') && !p.id.startsWith('prod-mancity-') && !p.id.startsWith('prod-chelsea-') && !p.id.startsWith('prod-liverpool-'));
+  // Purge any and all lingering dummy seed kits
+  products = products.filter(p => !isMockProduct(p));
 
   // Filter & Search
   if (filters?.query) {
@@ -348,7 +390,7 @@ export async function createProduct(productData: Omit<Product, 'id' | 'total_sto
     }
   }
 
-  const currentProducts = getStored<Product[]>(STORAGE_KEY_PRODUCTS, memoryProducts);
+  const currentProducts = getStored<Product[]>(STORAGE_KEY_PRODUCTS, memoryProducts).filter(p => !isMockProduct(p));
   const updated = [newProduct, ...currentProducts];
   memoryProducts = updated;
   setStored(STORAGE_KEY_PRODUCTS, updated);

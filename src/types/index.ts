@@ -49,6 +49,7 @@ export interface Product {
   is_new_arrival: boolean;
   is_popular: boolean;
   is_available: boolean;
+  is_admin_created?: boolean;
   images: string[];
   sizes: {
     size: JerseySize;

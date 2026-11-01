@@ -19,6 +19,8 @@ import { AirbnbCategoryBar } from '@/components/ui/AirbnbCategoryBar';
 import { buildWhatsAppUrl, formatCedis } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 export default async function HomePage() {
   const [products, categories, storeSettings] = await Promise.all([

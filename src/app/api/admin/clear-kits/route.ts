@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getAdminSession } from '@/lib/auth/admin-auth';
 import { Pool } from 'pg';
 import { createAdminClient, createClient, isSupabaseConfigured } from '@/lib/supabase/client';
@@ -79,12 +80,29 @@ export async function POST(request: Request) {
         } catch (catErr: any) {
           logs.push(`Category image reset note: ${catErr.message}`);
         }
+
+        try {
+          await client.query('ALTER TABLE public.products ADD COLUMN IF NOT EXISTS is_admin_created BOOLEAN DEFAULT true;');
+          logs.push('Ensured is_admin_created column in PostgreSQL products table.');
+        } catch (colErr: any) {
+          logs.push(`Column note: ${colErr.message}`);
+        }
       } finally {
         client.release();
       }
     } catch (e: any) {
       logs.push(`Postgres direct truncate notice: ${e.message}`);
     }
+  }
+
+  // 3. Invalidate Next.js cache across entire storefront
+  try {
+    revalidatePath('/', 'layout');
+    revalidatePath('/shop');
+    revalidatePath('/categories');
+    logs.push('Purged Next.js cache tree across all routes.');
+  } catch (revErr: any) {
+    logs.push(`Cache purge notice: ${revErr.message}`);
   }
 
   return NextResponse.json({

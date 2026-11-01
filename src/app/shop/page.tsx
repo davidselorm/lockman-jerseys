@@ -4,6 +4,8 @@ import { ShopClientView } from './ShopClientView';
 import { AirbnbCategoryBar } from '@/components/ui/AirbnbCategoryBar';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 export const metadata = {
   title: 'All Football Jerseys | LOCKMAN JERSEYS Ghana',

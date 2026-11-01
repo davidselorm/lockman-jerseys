@@ -3,6 +3,10 @@ import { notFound } from 'next/navigation';
 import { getProductBySlug, getProducts } from '@/lib/store/data-service';
 import { ProductDetailClient } from './ProductDetailClient';
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
+
 interface ProductPageProps {
   params: {
     slug: string;

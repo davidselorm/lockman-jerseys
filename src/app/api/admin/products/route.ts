@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { getAdminSession } from '@/lib/auth/admin-auth';
 import { createAdminClient, createClient, isSupabaseConfigured } from '@/lib/supabase/client';
 import { Product, JerseySize } from '@/types';
@@ -77,13 +78,22 @@ export async function POST(request: Request) {
 
       const returnedProduct: Product = {
         ...createdProduct,
+        is_admin_created: true,
         images: productData.images || [],
         sizes: productData.sizes || [],
         total_stock,
       };
 
+      try {
+        revalidatePath('/', 'layout');
+      } catch {}
+
       return NextResponse.json({ success: true, product: returnedProduct }, { status: 201 });
     }
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, mode: 'local' });
   } catch (err: any) {
@@ -168,8 +178,16 @@ export async function PUT(request: Request) {
         await supabase.from('product_images').insert(imageInserts);
       }
 
+      try {
+        revalidatePath('/', 'layout');
+      } catch {}
+
       return NextResponse.json({ success: true, product: updatedProduct });
     }
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, mode: 'local' });
   } catch (err: any) {
@@ -201,11 +219,31 @@ export async function DELETE(request: Request) {
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
+
+      try {
+        revalidatePath('/', 'layout');
+      } catch {}
+
       return NextResponse.json({ success: true });
     }
+
+    try {
+      revalidatePath('/', 'layout');
+    } catch {}
 
     return NextResponse.json({ success: true, mode: 'local' });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
+}
+
+export async function GET() {
+  const session = await getAdminSession();
+  if (!session.authenticated) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { getProducts } = await import('@/lib/store/data-service');
+  const products = await getProducts();
+  return NextResponse.json({ count: products.length, products });
 }
