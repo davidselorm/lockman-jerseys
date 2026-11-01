@@ -218,7 +218,7 @@ export async function getProducts(filters?: {
             is_available: item.is_available,
             images: item.product_images?.length 
               ? item.product_images.sort((a: any, b: any) => a.display_order - b.display_order).map((img: any) => img.image_url)
-              : ['https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1000&q=80'],
+              : [],
             sizes: item.product_sizes?.map((s: any) => ({
               size: s.size as JerseySize,
               stock: s.stock_quantity,

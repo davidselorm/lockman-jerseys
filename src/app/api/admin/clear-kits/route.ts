@@ -56,7 +56,8 @@ export async function POST(request: Request) {
         await supabase.from('payment_records').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
         await supabase.from('products').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-        logs.push('Cleared products and orders from Supabase tables.');
+        await supabase.from('categories').update({ image_url: null }).neq('id', '00000000-0000-0000-0000-000000000000');
+        logs.push('Cleared products and reset category images in Supabase tables.');
       }
     } catch (e: any) {
       logs.push(`Supabase wipe warning: ${e.message}`);
@@ -71,6 +72,7 @@ export async function POST(request: Request) {
       try {
         await client.query(`
           TRUNCATE TABLE public.product_images, public.product_sizes, public.order_items, public.payment_records, public.orders, public.products CASCADE;
+          UPDATE public.categories SET image_url = NULL;
         `);
         logs.push('Executed TRUNCATE CASCADE on PostgreSQL tables.');
       } finally {

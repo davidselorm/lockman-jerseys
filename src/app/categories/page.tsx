@@ -28,30 +28,32 @@ export default async function CategoriesPage() {
 
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((cat) => {
+          {categories.map((cat, idx) => {
             const count = products.filter(p => p.category_id === cat.id).length;
             return (
               <Link
                 key={cat.id}
                 href={`/shop?cat=${cat.id}`}
-                className="group relative rounded-3xl overflow-hidden airbnb-card min-h-[320px] sm:min-h-[360px] flex flex-col justify-end p-8 border border-white/10 hover:border-white/30 transition-all"
+                className="group relative rounded-3xl overflow-hidden airbnb-card min-h-[200px] sm:min-h-[240px] flex flex-col justify-between p-8 border border-white/10 hover:border-white/30 transition-all bg-[#0A0A0A] hover:bg-[#111111]"
               >
-                <div className="absolute inset-0 bg-[#080808] p-6 flex items-center justify-center">
-                  <img
-                    src={cat.image_url}
-                    alt={cat.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out opacity-60 drop-shadow-[0_20px_30px_rgba(0,0,0,0.9)]"
-                  />
+                <div className="flex items-center justify-between">
+                  <span className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+                    {idx === 0 ? (
+                      <span className="text-lg font-black">01</span>
+                    ) : idx === 1 ? (
+                      <span className="text-lg font-black">02</span>
+                    ) : idx === 2 ? (
+                      <span className="text-lg font-black">03</span>
+                    ) : (
+                      <span className="text-lg font-black">04</span>
+                    )}
+                  </span>
+                  <span className="text-xs font-mono font-bold text-zinc-400 uppercase tracking-wider bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                    {count} Available
+                  </span>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
 
-                <div className="relative z-10 space-y-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">
-                      {count} Available in Accra
-                    </span>
-                  </div>
-
+                <div className="space-y-2">
                   <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-white group-hover:text-zinc-200 transition-colors">
                     {cat.name}
                   </h2>

@@ -33,12 +33,18 @@ export default function AboutPage() {
 
         {/* Brand Story */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-          <div className="relative rounded-3xl overflow-hidden airbnb-card aspect-[4/3] p-6 flex items-center justify-center bg-[#080808]">
-            <img
-              src="https://assets.adidas.com/images/w_600,f_auto,q_auto/3308086a783f43b2a6b309b13c693f71_9366/IU5013_HM1.jpg"
-              alt="Real Madrid Jersey"
-              className="w-full h-full object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.9)]"
-            />
+          <div className="relative rounded-3xl overflow-hidden airbnb-card aspect-[4/3] p-10 flex flex-col items-center justify-center bg-[#080808] border border-white/10 text-center space-y-4">
+            <div className="w-24 h-24 rounded-3xl bg-white/5 border border-white/15 overflow-hidden flex items-center justify-center p-3 shadow-2xl">
+              <img
+                src="/images/brand/logo.png"
+                alt="LOCKMAN JERSEYS"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs font-mono font-bold uppercase tracking-widest text-zinc-400">Accra, Ghana</span>
+              <h3 className="text-xl font-black text-white uppercase tracking-wider">LOCKMAN JERSEYS</h3>
+            </div>
           </div>
 
           <div className="space-y-6">

@@ -371,31 +371,30 @@ export default async function HomePage() {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-          {categories.map((cat) => (
+          {categories.map((cat, idx) => (
             <Link
               key={cat.id}
               href={`/shop?cat=${cat.id}`}
-              className="group relative rounded-3xl overflow-hidden airbnb-card aspect-[4/5] flex flex-col justify-end p-4 sm:p-6 active:border-white/40 transition-all"
+              className="group relative rounded-3xl overflow-hidden airbnb-card min-h-[160px] sm:min-h-[190px] flex flex-col justify-between p-5 sm:p-6 active:border-white/40 transition-all bg-[#0A0A0A] hover:bg-[#111111]"
             >
-              <div className="absolute inset-0 bg-[#080808] p-4 flex items-center justify-center">
-                <img
-                  src={cat.image_url}
-                  alt={cat.name}
-                  loading="lazy"
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 opacity-60"
-                />
+              <div className="flex items-center justify-between">
+                <span className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+                  {idx === 0 ? <ShieldCheck className="w-5 h-5 stroke-[2.2]" /> : idx === 1 ? <Flame className="w-5 h-5 stroke-[2.2]" /> : idx === 2 ? <Sparkles className="w-5 h-5 stroke-[2.2]" /> : <Truck className="w-5 h-5 stroke-[2.2]" />}
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 font-bold">
+                  {cat.badge || 'Official'}
+                </span>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
 
-              <div className="relative z-10 space-y-1">
-                <h3 className="font-sans text-sm sm:text-lg font-extrabold text-white group-hover:text-zinc-200 transition-colors">
+              <div className="space-y-1">
+                <h3 className="font-sans text-sm sm:text-base font-extrabold text-white group-hover:text-zinc-200 transition-colors">
                   {cat.name}
                 </h3>
                 <p className="hidden sm:block text-xs text-zinc-400 line-clamp-2">
                   {cat.description}
                 </p>
-                <div className="pt-1 flex items-center gap-1.5 text-xs font-bold text-white">
-                  <span>Explore</span>
+                <div className="pt-2 flex items-center gap-1.5 text-xs font-bold text-white">
+                  <span>Explore Collection</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>

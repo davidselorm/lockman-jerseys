@@ -643,10 +643,6 @@ export function AdminDashboardClient({
                             src={imgUrl}
                             alt={`Preview ${idx + 1}`}
                             className="w-full h-full object-contain rounded-xl"
-                            onError={(e) => {
-                              // Fallback placeholder if link breaks
-                              (e.target as HTMLElement).setAttribute('src', 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=600&q=80');
-                            }}
                           />
 
                           {/* Cover Badge */}
@@ -1217,11 +1213,15 @@ export function AdminDashboardClient({
                             
                             <td className="py-3.5 px-6 flex items-center gap-3.5">
                               <div className="w-12 h-12 rounded-2xl bg-black border border-white/10 p-1 flex items-center justify-center shrink-0 overflow-hidden">
-                                <img
-                                  src={p.images[0] || 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=600&q=80'}
-                                  alt=""
-                                  className="w-full h-full object-contain group-hover:scale-105 transition-transform"
-                                />
+                                {p.images[0] ? (
+                                  <img
+                                    src={p.images[0]}
+                                    alt=""
+                                    className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                                  />
+                                ) : (
+                                  <Package className="w-5 h-5 text-zinc-500" />
+                                )}
                               </div>
                               <div>
                                 <span className="font-extrabold text-white block uppercase tracking-tight text-xs">
@@ -1311,11 +1311,15 @@ export function AdminDashboardClient({
                     <div key={p.id} className="p-4 rounded-3xl bg-[#0C0C0C] border border-white/10 space-y-3">
                       <div className="flex gap-3.5 items-center">
                         <div className="w-16 h-16 rounded-2xl bg-black border border-white/10 p-1 flex items-center justify-center shrink-0">
-                          <img
-                            src={p.images[0] || 'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=600&q=80'}
-                            alt=""
-                            className="w-full h-full object-contain"
-                          />
+                          {p.images[0] ? (
+                            <img
+                              src={p.images[0]}
+                              alt=""
+                              className="w-full h-full object-contain"
+                            />
+                          ) : (
+                            <Package className="w-6 h-6 text-zinc-500" />
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-extrabold text-xs text-white truncate uppercase tracking-tight">
