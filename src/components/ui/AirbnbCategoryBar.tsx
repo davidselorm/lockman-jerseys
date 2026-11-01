@@ -27,7 +27,7 @@ const AIRBNB_CATEGORIES: CategoryItem[] = [
   {
     id: 'all',
     name: 'All Jerseys',
-    tag: '17 Kits',
+    tag: 'All Kits',
     href: '/shop',
     icon: Sparkles,
   },

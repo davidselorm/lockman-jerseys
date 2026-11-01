@@ -216,11 +216,38 @@ export default async function HomePage() {
         </div>
 
         {/* 2-Column Mobile Grid, 4-Column Desktop Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
-          {featuredJerseys.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {featuredJerseys.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
+            {featuredJerseys.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 sm:p-12 rounded-3xl airbnb-card text-center space-y-4 max-w-2xl mx-auto">
+            <span className="inline-block p-3 rounded-full bg-white/10 text-white">
+              <Sparkles className="w-6 h-6" />
+            </span>
+            <div className="space-y-1.5">
+              <h3 className="text-base sm:text-lg font-extrabold text-white">
+                New Season Drop Loading
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">
+                Official player issue and fan edition matchwear kits are being stocked in the vault. Contact us directly for custom requests.
+              </p>
+            </div>
+            {whatsappNumber && (
+              <a
+                href={buildWhatsAppUrl(whatsappNumber, 'Hello LOCKMAN JERSEYS! I want to inquire about available kits.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-xs font-extrabold hover:bg-zinc-200 transition-colors shadow-md"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-black" />
+                <span>Inquire on WhatsApp</span>
+              </a>
+            )}
+          </div>
+        )}
       </section>
 
       {/* 4. CUSTOM PRINTING BANNER */}
@@ -274,11 +301,38 @@ export default async function HomePage() {
         </div>
 
         {/* 2-Column Mobile Grid, 4-Column Desktop Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
-          {newArrivals.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {newArrivals.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
+            {newArrivals.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 sm:p-12 rounded-3xl airbnb-card text-center space-y-4 max-w-2xl mx-auto">
+            <span className="inline-block p-3 rounded-full bg-white/10 text-white">
+              <Flame className="w-6 h-6" />
+            </span>
+            <div className="space-y-1.5">
+              <h3 className="text-base sm:text-lg font-extrabold text-white">
+                Fresh Drops Dropping Weekly
+              </h3>
+              <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto">
+                All kits are authenticated upon arrival in Accra. Tap below to follow our latest releases on Snapchat.
+              </p>
+            </div>
+            {storeSettings?.snapchat_username && (
+              <a
+                href={`https://snapchat.com/add/${storeSettings.snapchat_username}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-xs font-extrabold hover:bg-zinc-200 transition-colors shadow-md"
+              >
+                <Camera className="w-3.5 h-3.5 text-black" />
+                <span>Follow on Snapchat</span>
+              </a>
+            )}
+          </div>
+        )}
       </section>
 
       {/* 6. CATEGORIES */}

@@ -16,10 +16,10 @@ import {
 } from './seed-data';
 import { createClient, createAdminClient, isSupabaseConfigured } from '@/lib/supabase/client';
 
-const STORAGE_KEY_PRODUCTS = 'lockman_products_v4';
-const STORAGE_KEY_CATEGORIES = 'lockman_categories_v4';
-const STORAGE_KEY_SETTINGS = 'lockman_settings_v4';
-const STORAGE_KEY_ORDERS = 'lockman_orders_v4';
+const STORAGE_KEY_PRODUCTS = 'lockman_products_v5';
+const STORAGE_KEY_CATEGORIES = 'lockman_categories_v5';
+const STORAGE_KEY_SETTINGS = 'lockman_settings_v5';
+const STORAGE_KEY_ORDERS = 'lockman_orders_v5';
 
 // In-memory singletons for fallback or SSR initial state
 let memoryProducts: Product[] = [...INITIAL_PRODUCTS];
@@ -678,6 +678,54 @@ export async function verifyPayment(
     }
   }
 
+  return true;
+}
+
+export async function clearAllProducts(): Promise<boolean> {
+  memoryProducts = [];
+  if (isBrowser) {
+    localStorage.removeItem(STORAGE_KEY_PRODUCTS);
+    localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify([]));
+    localStorage.removeItem('lockman_products_v4');
+    localStorage.removeItem('lockman_products_v3');
+    localStorage.removeItem('lockman_products_v2');
+    localStorage.removeItem('lockman_products_v1');
+  }
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createAdminClient() || createClient();
+      if (supabase) {
+        await supabase.from('product_images').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('product_sizes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('products').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      }
+    } catch (e) {
+      console.warn('Supabase product clear error:', e);
+    }
+  }
+  return true;
+}
+
+export async function clearAllOrders(): Promise<boolean> {
+  memoryOrders = [];
+  if (isBrowser) {
+    localStorage.removeItem(STORAGE_KEY_ORDERS);
+    localStorage.setItem(STORAGE_KEY_ORDERS, JSON.stringify([]));
+    localStorage.removeItem('lockman_orders_v4');
+    localStorage.removeItem('lockman_orders_v3');
+  }
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createAdminClient() || createClient();
+      if (supabase) {
+        await supabase.from('order_items').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('payment_records').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+        await supabase.from('orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      }
+    } catch (e) {
+      console.warn('Supabase order clear error:', e);
+    }
+  }
   return true;
 }
 
