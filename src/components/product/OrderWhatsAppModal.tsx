@@ -36,6 +36,8 @@ export function OrderWhatsAppModal({
     quantity,
     totalPrice: total,
     city,
+    imageUrl: product.images?.[0],
+    productSlug: product.slug,
   });
 
   const handleSend = () => {

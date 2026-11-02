@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
-import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
+import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl, resolveAbsoluteImageUrl } from '@/lib/utils';
 
 export default function CartPage() {
   const { 
@@ -52,7 +52,12 @@ export default function CartPage() {
       msg += `${index + 1}. *${item.product.name}*\n`;
       msg += `   • Size: ${item.selectedSize}\n`;
       msg += `   • Qty: ${item.quantity}\n`;
-      msg += `   • Price: GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n\n`;
+      msg += `   • Price: GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;
+      const absImg = resolveAbsoluteImageUrl(item.product.images?.[0]);
+      if (absImg) {
+        msg += `   • Kit Photo: ${absImg}\n`;
+      }
+      msg += `\n`;
     });
     msg += `*Subtotal:* GH₵ ${subtotal.toFixed(2)}\n`;
     msg += `*Delivery Location:* ${deliveryCity === 'Accra' ? 'Accra Metro' : 'Outside Accra (Nationwide)'} (${deliveryFee === 0 ? 'FREE' : `GH₵ ${deliveryFee.toFixed(2)}`})\n`;

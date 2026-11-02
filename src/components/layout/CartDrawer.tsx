@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
-import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
+import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl, resolveAbsoluteImageUrl } from '@/lib/utils';
 
 export function CartDrawer() {
   const { 
@@ -46,6 +46,10 @@ export function CartDrawer() {
     let msg = `*ORDER INQUIRY - LOCKMAN JERSEYS*\n\n`;
     items.forEach((item, index) => {
       msg += `${index + 1}. *${item.product.name}*\n   Size: ${item.selectedSize} | Qty: ${item.quantity} | GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;
+      const absImg = resolveAbsoluteImageUrl(item.product.images?.[0]);
+      if (absImg) {
+        msg += `   Kit Photo: ${absImg}\n`;
+      }
     });
     msg += `\n*Subtotal:* GH₵ ${subtotal.toFixed(2)}`;
     msg += `\n*Delivery Location:* ${deliveryCity} (GH₵ ${deliveryFee.toFixed(2)})`;

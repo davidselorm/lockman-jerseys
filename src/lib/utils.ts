@@ -13,6 +13,17 @@ export function formatCedis(amount: number): string {
   })}`;
 }
 
+export function resolveAbsoluteImageUrl(url?: string): string {
+  if (!url) return '';
+  if (url.startsWith('data:')) return ''; // Skip bulky base64 data URLs in message text
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  const baseUrl = typeof window !== 'undefined' && window.location.origin 
+    ? window.location.origin 
+    : 'https://lockmanjerseys.vercel.app';
+  const cleanPath = url.startsWith('/') ? url : `/${url}`;
+  return `${baseUrl}${cleanPath}`;
+}
+
 export function generateWhatsAppMessage(params: {
   productName: string;
   size: JerseySize;
@@ -20,18 +31,32 @@ export function generateWhatsAppMessage(params: {
   totalPrice: number;
   city?: string;
   orderNumber?: string;
+  imageUrl?: string;
+  productSlug?: string;
 }): string {
-  const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber } = params;
+  const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber, imageUrl, productSlug } = params;
   let msg = `*NEW ORDER - LOCKMAN JERSEYS*\n\n`;
   if (orderNumber) {
-    msg += `*Order Reference:* ${orderNumber}\n`;
+    msg += `*Order Reference:* #${orderNumber}\n`;
   }
   msg += `*Item:* ${productName}\n`;
   msg += `*Size:* ${size}\n`;
   msg += `*Quantity:* ${quantity}\n`;
   msg += `*Total Amount:* GH₵ ${totalPrice.toFixed(2)}\n`;
   msg += `*Delivery Location:* ${city}\n\n`;
-  msg += `Please confirm availability and dispatch schedule.`;
+
+  const absImage = resolveAbsoluteImageUrl(imageUrl);
+  if (absImage) {
+    msg += `*Kit Photo:* ${absImage}\n`;
+  }
+  if (productSlug) {
+    const baseUrl = typeof window !== 'undefined' && window.location.origin 
+      ? window.location.origin 
+      : 'https://lockmanjerseys.vercel.app';
+    msg += `*Product Link:* ${baseUrl}/product/${productSlug}\n`;
+  }
+
+  msg += `\nPlease confirm availability and dispatch schedule.`;
   return msg;
 }
 
@@ -55,9 +80,23 @@ export function generateSnapchatOrderSummary(params: {
   totalPrice: number;
   city?: string;
   orderNumber?: string;
+  imageUrl?: string;
+  productSlug?: string;
 }): string {
-  const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber } = params;
-  return `*LOCKMAN JERSEYS ORDER*\n${orderNumber ? `Ref: #${orderNumber}\n` : ''}Item: ${productName}\nSize: ${size} | Qty: ${quantity}\nTotal: GH₵ ${totalPrice.toFixed(2)}\nDelivery: ${city}\n\nSent via LockmanJerseys.com`;
+  const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber, imageUrl, productSlug } = params;
+  const absImage = resolveAbsoluteImageUrl(imageUrl);
+  let text = `*LOCKMAN JERSEYS ORDER*\n${orderNumber ? `Ref: #${orderNumber}\n` : ''}Item: ${productName}\nSize: ${size} | Qty: ${quantity}\nTotal: GH₵ ${totalPrice.toFixed(2)}\nDelivery: ${city}\n`;
+  if (absImage) {
+    text += `Kit Photo: ${absImage}\n`;
+  }
+  if (productSlug) {
+    const baseUrl = typeof window !== 'undefined' && window.location.origin 
+      ? window.location.origin 
+      : 'https://lockmanjerseys.vercel.app';
+    text += `Product Link: ${baseUrl}/product/${productSlug}\n`;
+  }
+  text += `\nSent via LockmanJerseys.com`;
+  return text;
 }
 
 export function buildSnapchatUrl(username: string): string {
