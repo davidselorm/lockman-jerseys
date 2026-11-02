@@ -35,9 +35,15 @@ export function generateWhatsAppMessage(params: {
   return msg;
 }
 
-export function buildWhatsAppUrl(phoneNumber: string, message: string): string {
-  // Normalize phone number (strip spaces, +, dashes)
-  const cleanedPhone = phoneNumber.replace(/[^0-9]/g, '');
+export const DEFAULT_WHATSAPP_NUMBER = '233257107980';
+
+export function buildWhatsAppUrl(phoneNumber: string | undefined | null, message: string): string {
+  // Normalize phone number (strip spaces, +, dashes). Default to official hotline if missing or dummy
+  const raw = phoneNumber && phoneNumber.trim() ? phoneNumber : DEFAULT_WHATSAPP_NUMBER;
+  let cleanedPhone = raw.replace(/[^0-9]/g, '');
+  if (!cleanedPhone || cleanedPhone === '233240000000' || cleanedPhone.includes('000000')) {
+    cleanedPhone = DEFAULT_WHATSAPP_NUMBER;
+  }
   const encodedMsg = encodeURIComponent(message);
   return `https://wa.me/${cleanedPhone}?text=${encodedMsg}`;
 }

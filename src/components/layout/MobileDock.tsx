@@ -16,7 +16,7 @@ import { buildWhatsAppUrl } from '@/lib/utils';
 export function MobileDock() {
   const pathname = usePathname();
   const { totalItems, setIsOpen, storeSettings } = useCart();
-  const whatsappNumber = storeSettings?.whatsapp_number || '';
+  const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
 
   // Don't show dock inside admin panel or on product detail page (which has its own dedicated sticky purchase bar)
   if (pathname?.startsWith('/admin') || pathname?.startsWith('/product/')) {
@@ -24,10 +24,6 @@ export function MobileDock() {
   }
 
   const handleOpenWhatsApp = () => {
-    if (!whatsappNumber) {
-      window.location.href = '/contact';
-      return;
-    }
     const msg = 'Hello Lockman Jerseys! I would like to inquire about jersey availability.';
     window.open(buildWhatsAppUrl(whatsappNumber, msg), '_blank');
   };

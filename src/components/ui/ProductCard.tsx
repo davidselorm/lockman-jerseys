@@ -62,7 +62,7 @@ export function ProductCard({ product }: ProductCardProps) {
           className="relative aspect-square bg-[#080808] overflow-hidden block p-4 sm:p-6 flex items-center justify-center border-b border-white/[0.06]"
         >
           <img
-            src={product.images[0]}
+            src={product.images?.[0] || '/images/brand/logo.png'}
             alt={product.name}
             loading="lazy"
             className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 ease-out drop-shadow-[0_12px_24px_rgba(0,0,0,0.8)]"
@@ -151,21 +151,23 @@ export function ProductCard({ product }: ProductCardProps) {
 
           {/* Action Buttons: Responsive for Mobile & Desktop */}
           <div className="pt-2 border-t border-white/[0.08]">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 type="button"
                 onClick={handleOpenWhatsApp}
-                className="airbnb-pill py-2.5 px-3 rounded-xl text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/10 active:scale-95"
+                aria-label="Order on WhatsApp"
+                title="Order on WhatsApp"
+                className="airbnb-pill h-9 sm:h-10 px-2.5 sm:px-3 rounded-xl text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/10 active:scale-95 shrink-0"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-400" />
-                <span>WhatsApp</span>
+                <MessageCircle className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
+                <span className="hidden sm:inline">WhatsApp</span>
               </button>
 
               <button
                 type="button"
                 disabled={isOutOfStock || isCurrentSizeOut}
                 onClick={handleAddToCart}
-                className={`py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 ${
+                className={`flex-1 h-9 sm:h-10 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 min-w-0 ${
                   added
                     ? 'bg-zinc-200 text-black'
                     : isOutOfStock || isCurrentSizeOut
@@ -176,12 +178,12 @@ export function ProductCard({ product }: ProductCardProps) {
                 {added ? (
                   <>
                     <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span>Added</span>
+                    <span className="truncate">Added</span>
                   </>
                 ) : (
                   <>
                     <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span>Add</span>
+                    <span className="truncate">Add to Bag</span>
                   </>
                 )}
               </button>

@@ -43,15 +43,18 @@ export const INITIAL_CATEGORIES: Category[] = [
 // All kits are published directly via the Admin Console.
 export const INITIAL_PRODUCTS: Product[] = [];
 
+export const OFFICIAL_WHATSAPP_NUMBER = '233257107980';
+export const OFFICIAL_PHONE_DISPLAY = '+233 25 710 7980';
+
 export const INITIAL_STORE_SETTINGS: StoreSettings = {
   id: 'settings-default',
   store_name: 'LOCKMAN JERSEYS',
-  phone_display: '+233 24 000 0000',
+  phone_display: OFFICIAL_PHONE_DISPLAY,
   email_contact: 'contact@lockmanjerseys.com',
   location_address: 'Accra, Ghana',
   
   // WhatsApp settings (configurable in Admin Settings)
-  whatsapp_number: '233240000000',
+  whatsapp_number: OFFICIAL_WHATSAPP_NUMBER,
   whatsapp_message_template: 'Hello LOCKMAN JERSEYS! I want to order the following:\n\n*Product:* {product_name}\n*Size:* {size}\n*Quantity:* {quantity}\n*Price:* GH₵{total}\n*Delivery City:* {city}\n\nPlease confirm availability and dispatch schedule.',
   
   // Snapchat settings (configurable in Admin Settings)

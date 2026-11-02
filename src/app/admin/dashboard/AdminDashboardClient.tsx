@@ -1558,7 +1558,7 @@ export function AdminDashboardClient({
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. 233240000000"
+                  placeholder="e.g. 233257107980"
                   value={settings.whatsapp_number}
                   onChange={(e) => setSettings({ ...settings, whatsapp_number: e.target.value })}
                   className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
@@ -1646,7 +1646,7 @@ export function AdminDashboardClient({
                   <label className="text-[11px] text-zinc-400 block mb-1.5 font-mono">Customer Inquiry Phone</label>
                   <input
                     type="text"
-                    placeholder="e.g. +233 24 000 0000"
+                    placeholder="e.g. +233 25 710 7980"
                     value={settings.phone_display}
                     onChange={(e) => setSettings({ ...settings, phone_display: e.target.value })}
                     className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"

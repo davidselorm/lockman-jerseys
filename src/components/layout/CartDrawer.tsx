@@ -41,11 +41,7 @@ export function CartDrawer() {
 
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return;
-    const phone = storeSettings?.whatsapp_number || '';
-    if (!phone) {
-      alert('WhatsApp ordering hotline is currently being configured by the administrator in the Admin Dashboard. Please check back shortly.');
-      return;
-    }
+    const phone = storeSettings?.whatsapp_number || '233257107980';
     let msg = `🔥 *ORDER INQUIRY - LOCKMAN JERSEYS*\n\n`;
     items.forEach((item, index) => {
       msg += `${index + 1}. *${item.product.name}*\n   Size: ${item.selectedSize} | Qty: ${item.quantity} | GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;

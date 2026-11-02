@@ -16,10 +16,10 @@ import {
 } from './seed-data';
 import { createClient, createAdminClient, isSupabaseConfigured } from '@/lib/supabase/client';
 
-const STORAGE_KEY_PRODUCTS = 'lockman_products_v6';
-const STORAGE_KEY_CATEGORIES = 'lockman_categories_v6';
-const STORAGE_KEY_SETTINGS = 'lockman_settings_v6';
-const STORAGE_KEY_ORDERS = 'lockman_orders_v6';
+const STORAGE_KEY_PRODUCTS = 'lockman_products_v7';
+const STORAGE_KEY_CATEGORIES = 'lockman_categories_v7';
+const STORAGE_KEY_SETTINGS = 'lockman_settings_v7';
+const STORAGE_KEY_ORDERS = 'lockman_orders_v7';
 
 // In-memory singletons for fallback or SSR initial state
 let memoryProducts: Product[] = [...INITIAL_PRODUCTS];
@@ -32,7 +32,7 @@ const isBrowser = typeof window !== 'undefined';
 // Wipe obsolete mock data caches from client browser storage
 if (isBrowser) {
   try {
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) {
       localStorage.removeItem(`lockman_products_v${i}`);
       localStorage.removeItem(`lockman_categories_v${i}`);
       localStorage.removeItem(`lockman_settings_v${i}`);
@@ -80,6 +80,10 @@ export async function getStoreSettings(): Promise<StoreSettings> {
             ...memorySettings,
             ...data,
           };
+          if (!mergedSettings.whatsapp_number || mergedSettings.whatsapp_number === '233240000000' || mergedSettings.whatsapp_number.includes('000000')) {
+            mergedSettings.whatsapp_number = '233257107980';
+            mergedSettings.phone_display = '+233 25 710 7980';
+          }
           if (isBrowser) setStored(STORAGE_KEY_SETTINGS, mergedSettings);
           return mergedSettings;
         }
@@ -89,7 +93,12 @@ export async function getStoreSettings(): Promise<StoreSettings> {
     }
   }
 
-  return getStored<StoreSettings>(STORAGE_KEY_SETTINGS, memorySettings);
+  const stored = getStored<StoreSettings>(STORAGE_KEY_SETTINGS, memorySettings);
+  if (!stored.whatsapp_number || stored.whatsapp_number === '233240000000' || stored.whatsapp_number.includes('000000')) {
+    stored.whatsapp_number = '233257107980';
+    stored.phone_display = '+233 25 710 7980';
+  }
+  return stored;
 }
 
 export async function updateStoreSettings(updates: Partial<StoreSettings>): Promise<StoreSettings> {

@@ -27,7 +27,7 @@ interface ProductDetailClientProps {
 export function ProductDetailClient({ product, relatedProducts }: ProductDetailClientProps) {
   const { addItem } = useCart();
 
-  const [activeImage, setActiveImage] = useState(product.images[0]);
+  const [activeImage, setActiveImage] = useState(product.images?.[0] || '/images/brand/logo.png');
   const [selectedSize, setSelectedSize] = useState<JerseySize>(() => {
     const available = product.sizes.find(s => s.stock > 0);
     return available ? available.size : product.sizes[0]?.size || 'M';
@@ -72,7 +72,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
           <div className="lg:col-span-7 space-y-3 sm:space-y-4">
             <div className="relative aspect-square sm:aspect-[4/5] rounded-3xl overflow-hidden airbnb-card p-4 sm:p-6 flex items-center justify-center bg-[#080808]">
               <img
-                src={activeImage}
+                src={activeImage || '/images/brand/logo.png'}
                 alt={product.name}
                 className="w-full h-full object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.9)]"
               />
@@ -91,7 +91,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
             </div>
 
             {/* Thumbnail Row */}
-            {product.images.length > 1 && (
+            {product.images && product.images.length > 1 && (
               <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-1 scrollbar-none">
                 {product.images.map((img, idx) => {
                   const isActive = activeImage === img;
@@ -316,7 +316,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
               </Link>
             </div>
 
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6">
               {relatedProducts.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

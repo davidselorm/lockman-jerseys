@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-black text-white flex flex-col antialiased selection:bg-white selection:text-black">
         <CartProvider>
           <Navbar />
-          <main className="flex-1 pb-24 md:pb-0">{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
           <MobileDock />
           <WhatsAppFloatingButton />

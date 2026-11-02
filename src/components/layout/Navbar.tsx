@@ -23,7 +23,7 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const whatsappNumber = storeSettings?.whatsapp_number || '';
+  const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,36 +97,18 @@ export function Navbar() {
               </Link>
             </div>
 
-            {/* Center: Airbnb-Style Iconic Search Pill (Desktop / Tablet) */}
-            <div className="hidden lg:flex items-center">
-              <button
-                type="button"
-                onClick={() => setSearchOpen(!searchOpen)}
-                className="airbnb-search-bar rounded-full py-2 px-4 flex items-center gap-3 text-xs text-white hover:border-white/40 transition-all shadow-md group cursor-pointer"
-              >
-                <span className="font-semibold text-white px-1">Any Club</span>
-                <span className="h-3 w-px bg-white/20" />
-                <span className="font-semibold text-white px-1">2024/25 Season</span>
-                <span className="h-3 w-px bg-white/20" />
-                <span className="text-zinc-400 font-normal px-1">All Sizes</span>
-                <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shrink-0 ml-1 group-hover:scale-105 transition-transform">
-                  <Search className="w-3.5 h-3.5 stroke-[2.5]" />
-                </div>
-              </button>
-            </div>
-
-            {/* Desktop Navigation Links (Compact) */}
-            <nav className="hidden md:flex lg:hidden items-center gap-6">
-              {navLinks.slice(1, 4).map((link) => {
-                const isActive = pathname === link.href;
+            {/* Center: Desktop Navigation Links */}
+            <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+              {navLinks.slice(1, 5).map((link) => {
+                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
                 return (
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`text-xs font-semibold tracking-wide transition-all ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all ${
                       isActive
-                        ? 'text-white'
-                        : 'text-zinc-400 hover:text-white'
+                        ? 'bg-white text-black font-bold shadow-sm'
+                        : 'text-zinc-300 hover:text-white hover:bg-white/[0.08]'
                     }`}
                   >
                     {link.name}
@@ -135,10 +117,22 @@ export function Navbar() {
               })}
             </nav>
 
-            {/* Right: Actions (Search Toggle, Admin, Cart) */}
+            {/* Right: Actions (Search, Contact, Bag) */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Search Toggle for Tablet / Mobile */}
+              {/* Search Button / Trigger */}
               <button
+                type="button"
+                onClick={() => setSearchOpen(!searchOpen)}
+                aria-label="Search jerseys"
+                className="hidden lg:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full airbnb-pill text-xs text-zinc-300 hover:text-white hover:border-white/40 transition-all cursor-pointer"
+              >
+                <Search className="w-3.5 h-3.5 text-zinc-400 stroke-[2.5]" />
+                <span className="text-zinc-400 font-medium">Search kits...</span>
+              </button>
+
+              {/* Mobile / Tablet Search Icon Button */}
+              <button
+                type="button"
                 onClick={() => setSearchOpen(!searchOpen)}
                 aria-label="Search jerseys"
                 className="lg:hidden w-10 h-10 flex items-center justify-center rounded-full airbnb-pill text-zinc-300 hover:text-white active:scale-95 transition-all"
@@ -147,17 +141,17 @@ export function Navbar() {
               </button>
 
               <Link
-                href="/shop"
-                className="hidden xl:inline-flex text-xs font-semibold text-zinc-300 hover:text-white px-3 py-2 rounded-full hover:bg-white/10 transition-colors"
+                href="/contact"
+                className="hidden xl:inline-flex text-xs font-semibold text-zinc-300 hover:text-white px-3 py-1.5 rounded-full hover:bg-white/10 transition-colors"
               >
-                All Kits
+                Contact
               </Link>
 
               {/* Cart Bag Link */}
               <Link
                 href="/cart"
                 aria-label="View Shopping Bag"
-                className="h-10 px-3.5 rounded-full bg-white text-black hover:bg-zinc-200 active:scale-95 transition-all flex items-center gap-2 font-bold text-xs shadow-md"
+                className="h-10 px-3.5 rounded-full bg-white text-black hover:bg-zinc-200 active:scale-95 transition-all flex items-center gap-2 font-bold text-xs shadow-md shrink-0"
               >
                 <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span className="hidden sm:inline">Bag</span>

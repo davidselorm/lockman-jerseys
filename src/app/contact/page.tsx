@@ -21,8 +21,9 @@ export default function ContactPage() {
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const whatsappNumber = storeSettings?.whatsapp_number || '';
-  const snapchatUser = storeSettings?.snapchat_username || '';
+  const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
+  const phoneDisplay = storeSettings?.phone_display || '+233 25 710 7980';
+  const snapchatUser = storeSettings?.snapchat_username || 'lockman_jerseys';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +86,7 @@ export default function ContactPage() {
                     <span className="font-sans text-sm font-bold text-white group-hover:text-zinc-200 transition-colors">
                       Chat on WhatsApp
                     </span>
-                    <p className="text-xs text-zinc-400 font-mono">{storeSettings?.phone_display || whatsappNumber}</p>
+                    <p className="text-xs text-zinc-400 font-mono">{phoneDisplay}</p>
                   </div>
                 </a>
               )}

@@ -32,13 +32,10 @@ export default async function HomePage() {
   const featuredJerseys = products.filter((p) => p.is_featured).slice(0, 4);
   const newArrivals = products.filter((p) => p.is_new_arrival).slice(0, 4);
 
-  const whatsappNumber = storeSettings?.whatsapp_number || '';
+  const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
 
   return (
     <div className="space-y-10 sm:space-y-16 pb-20 sm:pb-28 overflow-hidden bg-black">
-      
-      {/* Signature Airbnb Category Bar */}
-      <AirbnbCategoryBar activeId="all" />
 
       {/* 1. AIRBNB-INSPIRED HIGH-CONTRAST HERO SECTION */}
       <section className="relative pt-4 sm:pt-10 pb-8 sm:pb-16 border-b border-white/[0.08] overflow-hidden">
@@ -175,6 +172,9 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Signature Airbnb Category Bar */}
+      <AirbnbCategoryBar activeId="all" />
+
       {/* 2. VALUE PROPOSITIONS (Airbnb High-Contrast Minimalism) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -243,9 +243,9 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* 2-Column Mobile Grid, 4-Column Desktop Grid */}
+        {/* 2-Column Mobile Grid, 3-Column Tablet, 4-Column Desktop Grid */}
         {featuredJerseys.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
             {featuredJerseys.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -328,9 +328,9 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* 2-Column Mobile Grid, 4-Column Desktop Grid */}
+        {/* 2-Column Mobile Grid, 3-Column Tablet, 4-Column Desktop Grid */}
         {newArrivals.length > 0 ? (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5 lg:gap-6">
             {newArrivals.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

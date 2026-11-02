@@ -9,15 +9,11 @@ import { buildWhatsAppUrl } from '@/lib/utils';
 export function WhatsAppFloatingButton() {
   const pathname = usePathname();
   const { storeSettings } = useCart();
-  const phoneNumber = storeSettings?.whatsapp_number || '';
+  const phoneNumber = storeSettings?.whatsapp_number || '233257107980';
 
   const defaultMsg = 'Hello LOCKMAN JERSEYS! I would like to inquire about jersey availability and custom printing.';
 
   const handleOpenWhatsApp = () => {
-    if (!phoneNumber) {
-      window.location.href = '/contact';
-      return;
-    }
     window.open(buildWhatsAppUrl(phoneNumber, defaultMsg), '_blank');
   };
 

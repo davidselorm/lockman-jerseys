@@ -35,18 +35,15 @@ export default function CartPage() {
 
   const [copiedSnapchat, setCopiedSnapchat] = useState(false);
 
-  const whatsappNumber = storeSettings?.whatsapp_number || '';
-  const snapchatUsername = storeSettings?.snapchat_username || '';
+  const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
+  const snapchatUsername = storeSettings?.snapchat_username || 'lockman_jerseys';
   const freeShippingThreshold = storeSettings?.free_delivery_threshold || 1200;
   const freeShippingDiff = Math.max(0, freeShippingThreshold - subtotal);
   const freeShippingPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
 
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return;
-    if (!whatsappNumber) {
-      alert('The WhatsApp ordering hotline is currently being configured by the store administrator. Please contact us on Snapchat or visit our contact page.');
-      return;
-    }
+    const activeNumber = whatsappNumber || '233257107980';
 
     let msg = `🔥 *NEW ORDER - LOCKMAN JERSEYS*\n\n`;
     items.forEach((item, index) => {
@@ -60,7 +57,7 @@ export default function CartPage() {
     msg += `*Total Amount:* GH₵ ${total.toFixed(2)}\n\n`;
     msg += `Please confirm kit availability and courier dispatch schedule.`;
 
-    window.open(buildWhatsAppUrl(whatsappNumber, msg), '_blank');
+    window.open(buildWhatsAppUrl(activeNumber, msg), '_blank');
   };
 
   const handleSnapchatOrder = () => {
@@ -86,7 +83,7 @@ export default function CartPage() {
   };
 
   return (
-    <div className="bg-black min-h-screen py-8 sm:py-12 pb-24 md:pb-16">
+    <div className="bg-black min-h-screen py-8 sm:py-12 pb-32 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         {/* Breadcrumb Navigation */}
@@ -287,7 +284,7 @@ export default function CartPage() {
             </div>
 
             {/* Right Column: Checkout Summary (Sticky on Desktop) */}
-            <div className="lg:col-span-5 space-y-5 sticky top-[90px]">
+            <div className="lg:col-span-5 space-y-5 sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto no-scrollbar">
               
               <div className="p-6 sm:p-7 rounded-3xl airbnb-card space-y-6">
                 <h2 className="font-sans text-lg font-extrabold text-white border-b border-white/[0.08] pb-3">

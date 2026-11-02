@@ -13,11 +13,11 @@ import { buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
 export function Footer() {
   const { storeSettings } = useCart();
 
-  const whatsappNumber = storeSettings?.whatsapp_number || '';
-  const snapchatUsername = storeSettings?.snapchat_username || '';
+  const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
+  const snapchatUsername = storeSettings?.snapchat_username || 'lockman_jerseys';
 
   return (
-    <footer className="bg-black border-t border-white/10 text-zinc-400 text-xs pt-12 pb-12">
+    <footer className="bg-black border-t border-white/10 text-zinc-400 text-xs pt-12 pb-28 md:pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Footer Columns */}
@@ -88,22 +88,22 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/shop?cat=cat-1" className="text-zinc-400 hover:text-white transition-colors">
+                <Link href="/shop?cat=club-jerseys" className="text-zinc-400 hover:text-white transition-colors">
                   Club Kits
                 </Link>
               </li>
               <li>
-                <Link href="/shop?cat=cat-2" className="text-zinc-400 hover:text-white transition-colors">
+                <Link href="/shop?cat=national-teams" className="text-zinc-400 hover:text-white transition-colors">
                   National Teams
                 </Link>
               </li>
               <li>
-                <Link href="/shop?cat=cat-3" className="text-zinc-400 hover:text-white transition-colors">
+                <Link href="/shop?type=Retro" className="text-zinc-400 hover:text-white transition-colors">
                   Retro Jerseys
                 </Link>
               </li>
               <li>
-                <Link href="/shop?cat=cat-4" className="text-zinc-400 hover:text-white transition-colors">
+                <Link href="/shop?type=Player+Version" className="text-zinc-400 hover:text-white transition-colors">
                   Player Version
                 </Link>
               </li>

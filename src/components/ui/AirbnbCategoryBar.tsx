@@ -102,7 +102,7 @@ function CategoryBarContent({ activeId, className = '' }: AirbnbCategoryBarProps
 
   return (
     <div
-      className={`w-full border-b border-white/[0.08] bg-black/90 backdrop-blur-2xl sticky top-[56px] sm:top-[76px] z-30 transition-all ${className}`}
+      className={`w-full border-b border-white/[0.08] bg-black/95 backdrop-blur-2xl sticky top-[60px] sm:top-[64px] md:top-[80px] z-30 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.5)] ${className}`}
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative flex items-center">
         

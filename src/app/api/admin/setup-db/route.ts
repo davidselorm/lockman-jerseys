@@ -412,7 +412,7 @@ export async function POST(request: Request) {
         logs.push(`Products already populated (${prodCheck.rows[0].count} jerseys found).`);
       }
 
-      // 13. Seed Store Settings if empty
+      // 13. Seed Store Settings if empty or update to official contact
       const settingsCheck = await client.query('SELECT count(*) FROM public.store_settings');
       if (Number(settingsCheck.rows[0].count) === 0) {
         await client.query(`
@@ -427,6 +427,13 @@ export async function POST(request: Request) {
           INITIAL_STORE_SETTINGS.delivery_fee_nationwide,
         ]);
         logs.push('Initial store settings inserted.');
+      } else {
+        await client.query(`
+          UPDATE public.store_settings 
+          SET whatsapp_number = $1, phone_display = $2
+          WHERE whatsapp_number = '233240000000' OR whatsapp_number IS NULL OR whatsapp_number = ''
+        `, [INITIAL_STORE_SETTINGS.whatsapp_number, INITIAL_STORE_SETTINGS.phone_display]);
+        logs.push('Verified store settings with official WhatsApp hotline.');
       }
 
       // 14. Storage Buckets (Optional / Best Effort)

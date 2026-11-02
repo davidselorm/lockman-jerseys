@@ -27,7 +27,7 @@ export function OrderWhatsAppModal({
   if (!isOpen) return null;
 
   const total = product.price * quantity;
-  const phoneNumber = storeSettings?.whatsapp_number || '';
+  const phoneNumber = storeSettings?.whatsapp_number || '233257107980';
 
   const previewMessage = generateWhatsAppMessage({
     productName: product.name,
@@ -38,11 +38,8 @@ export function OrderWhatsAppModal({
   });
 
   const handleSend = () => {
-    if (!phoneNumber) {
-      alert('The WhatsApp ordering hotline is currently being configured by the store administrator. Please contact us on Snapchat or visit our contact page.');
-      return;
-    }
-    const url = buildWhatsAppUrl(phoneNumber, previewMessage);
+    const activeNumber = phoneNumber || '233257107980';
+    const url = buildWhatsAppUrl(activeNumber, previewMessage);
     window.open(url, '_blank');
     onClose();
   };
@@ -76,7 +73,7 @@ export function OrderWhatsAppModal({
           <div className="flex gap-3.5 p-3 rounded-2xl apple-glass-pill">
             <div className="w-16 h-16 rounded-xl bg-black/40 border border-white/10 p-1 flex items-center justify-center shrink-0">
               <img
-                src={product.images[0]}
+                src={product.images?.[0] || '/images/brand/logo.png'}
                 alt={product.name}
                 className="w-full h-full object-contain drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]"
               />
