@@ -28,7 +28,7 @@ export default function AdminLoginPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         localStorage.setItem('lockman_admin_authed', 'true');
-        router.push('/admin/dashboard');
+        window.location.href = '/admin/dashboard';
       } else {
         setError(data.message || 'Invalid administrator credentials');
       }

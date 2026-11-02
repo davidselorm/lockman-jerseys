@@ -22,14 +22,22 @@ export async function POST(request: Request) {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      return NextResponse.json({ 
+      const response = NextResponse.json({ 
         success: true, 
         message: 'Authenticated successfully',
         email: inputEmail 
       });
+
+      response.cookies.set(COOKIE_NAME, token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+      });
+
+      return response;
     }
 
     return NextResponse.json(

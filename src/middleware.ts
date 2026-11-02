@@ -32,6 +32,30 @@ export function middleware(request: NextRequest) {
       redirectResponse.headers.set('Expires', '0');
       return redirectResponse;
     }
+
+    // Inspect token payload at Edge for expiration
+    try {
+      const payloadPart = sessionCookie.value.split('.')[1];
+      let base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+      while (base64.length % 4) base64 += '=';
+      const decodedJson = atob(base64);
+      const payload = JSON.parse(decodedJson);
+      
+      if (!payload || !payload.exp || Date.now() > payload.exp) {
+        const loginUrl = new URL('/admin/login', request.url);
+        loginUrl.searchParams.set('redirect', pathname);
+        const redirectResponse = NextResponse.redirect(loginUrl);
+        redirectResponse.cookies.set('lockman_admin_session', '', { path: '/', maxAge: 0 });
+        redirectResponse.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        return redirectResponse;
+      }
+    } catch {
+      const loginUrl = new URL('/admin/login', request.url);
+      loginUrl.searchParams.set('redirect', pathname);
+      const redirectResponse = NextResponse.redirect(loginUrl);
+      redirectResponse.cookies.set('lockman_admin_session', '', { path: '/', maxAge: 0 });
+      return redirectResponse;
+    }
   }
 
   const response = NextResponse.next();

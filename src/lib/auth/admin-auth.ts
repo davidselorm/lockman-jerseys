@@ -2,19 +2,19 @@ import crypto from 'crypto';
 import { cookies } from 'next/headers';
 
 const COOKIE_NAME = 'lockman_admin_session';
-const TOKEN_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const TOKEN_MAX_AGE_MS = 2 * 60 * 60 * 1000; // 2 hours (strict session lifetime)
 
 function getSecretKey(): string {
   if (process.env.ADMIN_SESSION_SECRET && process.env.ADMIN_SESSION_SECRET.trim().length >= 16) {
     return process.env.ADMIN_SESSION_SECRET.trim();
   }
 
-  // Fallback to deterministic derived secret from email + password + internal salt
+  // Fallback to deterministic derived secret from email + password + internal salt (revoked previous sessions)
   const email = process.env.ADMIN_EMAIL || 'admin@lockmanjerseys.com';
   const password = process.env.ADMIN_PASSWORD || 'LockmanAdmin2025!';
   return crypto
     .createHash('sha256')
-    .update(`${email}:${password}:lockman_jerseys_salt_2025_secure`)
+    .update(`${email}:${password}:lockman_jerseys_salt_2026_strict_session`)
     .digest('hex');
 }
 
