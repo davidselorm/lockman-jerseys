@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Camera, Copy, Check } from 'lucide-react';
+import { X, Copy, Check } from 'lucide-react';
+import { SnapchatLogo } from '@/components/ui/BrandLogos';
 import { Product, JerseySize } from '@/types';
 import { generateSnapchatOrderSummary, buildSnapchatUrl } from '@/lib/utils';
 import { useCart } from '@/lib/store/cart-context';
@@ -59,7 +60,7 @@ export function OrderSnapchatModal({
         <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl apple-glass-pill text-white">
-              <Camera className="w-4 h-4" />
+              <SnapchatLogo className="w-4 h-4 text-[#FFFC00]" />
             </div>
             <div>
               <h3 className="text-white font-bold text-sm uppercase tracking-wider">Order via Snapchat</h3>
@@ -148,7 +149,7 @@ export function OrderSnapchatModal({
             onClick={handleOpenSnapchat}
             className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-glass"
           >
-            <Camera className="w-4 h-4 text-black" />
+            <SnapchatLogo className="w-4 h-4 text-black" />
             <span>Copy & Open Snapchat</span>
           </button>
         </div>

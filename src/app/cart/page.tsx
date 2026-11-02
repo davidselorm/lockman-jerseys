@@ -14,8 +14,10 @@ import {
   Camera, 
   Check, 
   ChevronRight,
-  ArrowLeft
+  ArrowLeft,
+  Sparkles
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
 
@@ -45,7 +47,7 @@ export default function CartPage() {
     if (items.length === 0) return;
     const activeNumber = whatsappNumber || '233257107980';
 
-    let msg = `🔥 *NEW ORDER - LOCKMAN JERSEYS*\n\n`;
+    let msg = `*NEW ORDER - LOCKMAN JERSEYS*\n\n`;
     items.forEach((item, index) => {
       msg += `${index + 1}. *${item.product.name}*\n`;
       msg += `   • Size: ${item.selectedSize}\n`;
@@ -63,7 +65,7 @@ export default function CartPage() {
   const handleSnapchatOrder = () => {
     if (items.length === 0) return;
 
-    let text = `⚡ LOCKMAN JERSEYS BAG ORDER\n\n`;
+    let text = `*LOCKMAN JERSEYS BAG ORDER*\n\n`;
     items.forEach((item, index) => {
       text += `${index + 1}. ${item.product.name} [Size: ${item.selectedSize}, Qty: ${item.quantity}] - GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;
     });
@@ -161,7 +163,10 @@ export default function CartPage() {
                       {freeShippingDiff > 0 ? (
                         <>Add <strong className="text-emerald-400 font-extrabold">{formatCedis(freeShippingDiff)}</strong> more for FREE nationwide delivery</>
                       ) : (
-                        <span className="text-emerald-400 font-extrabold">🎉 Free Nationwide Express Delivery Unlocked!</span>
+                        <span className="text-emerald-400 font-extrabold inline-flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>Free Nationwide Express Delivery Unlocked!</span>
+                        </span>
                       )}
                     </span>
                   </div>
@@ -354,7 +359,7 @@ export default function CartPage() {
                     onClick={handleWhatsAppOrder}
                     className="w-full py-4 px-5 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
                   >
-                    <MessageCircle className="w-4 h-4 text-emerald-600 fill-emerald-600" />
+                    <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
                     <span>Order Entire Bag on WhatsApp</span>
                   </button>
 
@@ -371,7 +376,7 @@ export default function CartPage() {
                       </>
                     ) : (
                       <>
-                        <Camera className="w-4 h-4 text-yellow-400" />
+                        <SnapchatLogo className="w-4 h-4 text-[#FFFC00]" />
                         <span>Order Bag via Snapchat</span>
                       </>
                     )}

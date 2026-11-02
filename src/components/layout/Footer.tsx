@@ -3,10 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { 
-  MessageCircle, 
-  ArrowUpRight,
-  Camera
+  ArrowUpRight
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
 import { buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
 
@@ -55,7 +54,7 @@ export function Footer() {
                   rel="noreferrer"
                   className="airbnb-pill px-3.5 py-1.5 rounded-full text-white hover:text-zinc-200 transition-colors flex items-center gap-1.5 text-xs font-bold"
                 >
-                  <MessageCircle className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
+                  <WhatsAppLogo className="w-3.5 h-3.5 text-[#25D366]" />
                   <span>WhatsApp Concierge</span>
                   <ArrowUpRight className="w-3 h-3 text-zinc-400" />
                 </a>
@@ -68,7 +67,7 @@ export function Footer() {
                   rel="noreferrer"
                   className="airbnb-pill px-3.5 py-1.5 rounded-full text-white hover:text-zinc-200 transition-colors flex items-center gap-1.5 text-xs font-bold"
                 >
-                  <Camera className="w-3.5 h-3.5 text-yellow-300" />
+                  <SnapchatLogo className="w-3.5 h-3.5 text-[#FFFC00]" />
                   <span>Snapchat</span>
                   <ArrowUpRight className="w-3 h-3 text-zinc-400" />
                 </a>
@@ -144,12 +143,12 @@ export function Footer() {
             </p>
             <div className="pt-1 flex flex-wrap gap-2">
               <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-emerald-400 flex items-center gap-1.5 border border-emerald-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                WhatsApp Hotline
+                <WhatsAppLogo className="w-3.5 h-3.5 text-[#25D366]" />
+                <span>WhatsApp Hotline</span>
               </span>
               <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-yellow-400 flex items-center gap-1.5 border border-yellow-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
-                Snapchat Boutique
+                <SnapchatLogo className="w-3.5 h-3.5 text-[#FFFC00]" />
+                <span>Snapchat Boutique</span>
               </span>
               <span className="px-2.5 py-1 rounded-lg apple-glass-pill text-[11px] font-medium text-zinc-300">
                 Accra Showroom Pickup

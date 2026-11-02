@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingBag, MessageCircle, Check, ArrowRight } from 'lucide-react';
+import { ShoppingBag, Check, ArrowRight } from 'lucide-react';
+import { WhatsAppLogo } from '@/components/ui/BrandLogos';
 import { Product, JerseySize } from '@/types';
 import { formatCedis } from '@/lib/utils';
 import { useCart } from '@/lib/store/cart-context';
@@ -159,7 +160,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 title="Order on WhatsApp"
                 className="airbnb-pill h-9 sm:h-10 px-2.5 sm:px-3 rounded-xl text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/10 active:scale-95 shrink-0"
               >
-                <MessageCircle className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
+                <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
                 <span className="hidden sm:inline">WhatsApp</span>
               </button>
 

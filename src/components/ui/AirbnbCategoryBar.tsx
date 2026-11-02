@@ -48,7 +48,7 @@ const AIRBNB_CATEGORIES: CategoryItem[] = [
   {
     id: 'national-teams',
     name: 'Black Stars & Africa',
-    tag: 'Ghana 🇬🇭',
+    tag: 'Ghana',
     href: '/shop?cat=national-teams',
     icon: Star,
   },

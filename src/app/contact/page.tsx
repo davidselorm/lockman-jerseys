@@ -4,12 +4,11 @@ import React, { useState } from 'react';
 import { 
   Phone, 
   Mail, 
-  MessageCircle, 
-  Camera, 
   Send, 
   CheckCircle2, 
   Truck
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
 import { buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
 
@@ -77,7 +76,7 @@ export default function ContactPage() {
                   className="flex items-center gap-3.5 p-3.5 rounded-2xl airbnb-pill hover:border-white/30 transition-all group"
                 >
                   <div className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shrink-0 shadow-sm">
-                    <MessageCircle className="w-5 h-5 text-emerald-600 fill-emerald-600" />
+                    <WhatsAppLogo className="w-5 h-5 text-[#25D366]" />
                   </div>
                   <div className="flex-1">
                     <span className="text-[11px] font-bold text-emerald-400 block">
@@ -100,7 +99,7 @@ export default function ContactPage() {
                   className="flex items-center gap-3.5 p-3.5 rounded-2xl airbnb-pill hover:border-white/30 transition-all group"
                 >
                   <div className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shrink-0 shadow-sm">
-                    <Camera className="w-5 h-5 text-yellow-500" />
+                    <SnapchatLogo className="w-5 h-5 text-[#FFFC00]" />
                   </div>
                   <div className="flex-1">
                     <span className="text-[11px] font-bold text-zinc-400 block">
@@ -235,7 +234,7 @@ export default function ContactPage() {
                   type="submit"
                   className="w-full py-3.5 px-6 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md active:scale-95"
                 >
-                  <Send className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <WhatsAppLogo className="w-4 h-4 text-black" />
                   <span>Send via WhatsApp</span>
                 </button>
               </form>

@@ -5,14 +5,13 @@ import {
   ShieldCheck, 
   Truck, 
   CreditCard, 
-  MessageCircle, 
   ChevronRight, 
   Flame, 
   Sparkles, 
-  Camera, 
   Search, 
   CheckCircle2 
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { getProducts, getCategories, getStoreSettings } from '@/lib/store/data-service';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { AirbnbCategoryBar } from '@/components/ui/AirbnbCategoryBar';
@@ -201,7 +200,7 @@ export default async function HomePage() {
 
           <div className="p-4 sm:p-5 rounded-2xl airbnb-card flex flex-col items-start gap-3">
             <div className="p-2 sm:p-2.5 rounded-full bg-white text-black shrink-0 shadow-sm">
-              <Camera className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+              <SnapchatLogo className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
             </div>
             <div>
               <h4 className="font-sans text-xs sm:text-sm font-bold text-white">Snapchat Boutique</h4>
@@ -211,7 +210,7 @@ export default async function HomePage() {
 
           <div className="p-4 sm:p-5 rounded-2xl airbnb-card flex flex-col items-start gap-3">
             <div className="p-2 sm:p-2.5 rounded-full bg-white text-black shrink-0 shadow-sm">
-              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+              <WhatsAppLogo className="w-4 h-4 sm:w-5 sm:h-5 text-black" />
             </div>
             <div>
               <h4 className="font-sans text-xs sm:text-sm font-bold text-white">WhatsApp Concierge</h4>
@@ -270,7 +269,7 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-xs font-extrabold hover:bg-zinc-200 transition-colors shadow-md"
               >
-                <MessageCircle className="w-3.5 h-3.5 text-black" />
+                <WhatsAppLogo className="w-3.5 h-3.5 text-black" />
                 <span>Inquire on WhatsApp</span>
               </a>
             )}
@@ -355,7 +354,7 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-xs font-extrabold hover:bg-zinc-200 transition-colors shadow-md"
               >
-                <Camera className="w-3.5 h-3.5 text-black" />
+                <SnapchatLogo className="w-3.5 h-3.5 text-black" />
                 <span>Follow on Snapchat</span>
               </a>
             )}

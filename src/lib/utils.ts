@@ -22,7 +22,7 @@ export function generateWhatsAppMessage(params: {
   orderNumber?: string;
 }): string {
   const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber } = params;
-  let msg = `🔥 *NEW ORDER - LOCKMAN JERSEYS*\n\n`;
+  let msg = `*NEW ORDER - LOCKMAN JERSEYS*\n\n`;
   if (orderNumber) {
     msg += `*Order Reference:* ${orderNumber}\n`;
   }
@@ -57,7 +57,7 @@ export function generateSnapchatOrderSummary(params: {
   orderNumber?: string;
 }): string {
   const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber } = params;
-  return `⚡ LOCKMAN JERSEYS ORDER\n${orderNumber ? `Ref: #${orderNumber}\n` : ''}Item: ${productName}\nSize: ${size} | Qty: ${quantity}\nTotal: GH₵ ${totalPrice.toFixed(2)}\nDelivery: ${city}\n\nSent via LockmanJerseys.com`;
+  return `*LOCKMAN JERSEYS ORDER*\n${orderNumber ? `Ref: #${orderNumber}\n` : ''}Item: ${productName}\nSize: ${size} | Qty: ${quantity}\nTotal: GH₵ ${totalPrice.toFixed(2)}\nDelivery: ${city}\n\nSent via LockmanJerseys.com`;
 }
 
 export function buildSnapchatUrl(username: string): string {

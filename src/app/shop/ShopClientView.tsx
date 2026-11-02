@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, X, ArrowUpDown, SlidersHorizontal, MessageCircle, Check } from 'lucide-react';
+import { Search, X, ArrowUpDown, SlidersHorizontal, Check } from 'lucide-react';
+import { WhatsAppLogo } from '@/components/ui/BrandLogos';
 import { Product, Category, JerseySize } from '@/types';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { useCart } from '@/lib/store/cart-context';
@@ -543,7 +544,7 @@ export function ShopClientView({
                 rel="noreferrer"
                 className="px-5 py-2.5 rounded-xl bg-white text-black text-xs font-bold flex items-center gap-1.5 shadow-glass"
               >
-                <MessageCircle className="w-4 h-4 text-black" />
+                <WhatsAppLogo className="w-4 h-4 text-black" />
                 <span>Ask on WhatsApp</span>
               </a>
             )}

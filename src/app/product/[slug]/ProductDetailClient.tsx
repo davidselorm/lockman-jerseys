@@ -4,14 +4,13 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   ShoppingBag, 
-  MessageCircle, 
-  Camera, 
   CreditCard, 
   ShieldCheck, 
   Truck, 
   Check, 
   ChevronRight
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { Product, JerseySize } from '@/types';
 import { formatCedis } from '@/lib/utils';
 import { useCart } from '@/lib/store/cart-context';
@@ -215,7 +214,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                 onClick={() => setWhatsappModalOpen(true)}
                 className="w-full h-12 px-5 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
               >
-                <MessageCircle className="w-4 h-4 fill-emerald-600 text-emerald-600" />
+                <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
                 <span>Order on WhatsApp (GH₵ {totalPrice.toFixed(2)})</span>
               </button>
 
@@ -226,7 +225,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                   onClick={() => setSnapchatModalOpen(true)}
                   className="h-11 px-3 sm:px-4 rounded-full airbnb-pill hover:bg-white/10 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95"
                 >
-                  <Camera className="w-4 h-4 text-yellow-400" />
+                  <SnapchatLogo className="w-4 h-4 text-[#FFFC00]" />
                   <span>Snapchat DM</span>
                 </button>
 
@@ -341,7 +340,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
             onClick={() => setWhatsappModalOpen(true)}
             className="h-10 px-4 rounded-full bg-white text-black text-xs font-extrabold flex items-center gap-1.5 shadow-md active:scale-95 transition-transform"
           >
-            <MessageCircle className="w-4 h-4 text-emerald-600 fill-emerald-600" />
+            <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
             <span>Order</span>
           </button>
 

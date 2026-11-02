@@ -4,9 +4,9 @@ import {
   ShieldCheck, 
   Truck, 
   Award, 
-  MessageCircle, 
   ArrowRight
 } from 'lucide-react';
+import { WhatsAppLogo } from '@/components/ui/BrandLogos';
 
 export const metadata = {
   title: 'About Us | LOCKMAN JERSEYS Ghana',
@@ -107,7 +107,7 @@ export default function AboutPage() {
 
             <div className="p-6 rounded-3xl airbnb-card space-y-3">
               <div className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-sm">
-                <MessageCircle className="w-5 h-5 text-emerald-600 fill-emerald-600" />
+                <WhatsAppLogo className="w-5 h-5 text-[#25D366]" />
               </div>
               <h3 className="font-sans text-sm font-bold text-white">WhatsApp Concierge</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">

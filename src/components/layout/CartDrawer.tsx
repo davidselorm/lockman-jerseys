@@ -12,6 +12,7 @@ import {
   Check, 
   Truck
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
 import { formatCedis, buildWhatsAppUrl, buildSnapchatUrl } from '@/lib/utils';
 
@@ -42,7 +43,7 @@ export function CartDrawer() {
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return;
     const phone = storeSettings?.whatsapp_number || '233257107980';
-    let msg = `🔥 *ORDER INQUIRY - LOCKMAN JERSEYS*\n\n`;
+    let msg = `*ORDER INQUIRY - LOCKMAN JERSEYS*\n\n`;
     items.forEach((item, index) => {
       msg += `${index + 1}. *${item.product.name}*\n   Size: ${item.selectedSize} | Qty: ${item.quantity} | GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;
     });
@@ -57,7 +58,7 @@ export function CartDrawer() {
   const handleSnapchatOrder = () => {
     if (items.length === 0) return;
     const username = storeSettings?.snapchat_username || '';
-    let text = `⚡ LOCKMAN JERSEYS ORDER\n\n`;
+    let text = `*LOCKMAN JERSEYS ORDER*\n\n`;
     items.forEach((item) => {
       text += `• ${item.product.name} [Size: ${item.selectedSize}, Qty: ${item.quantity}]\n`;
     });
@@ -270,7 +271,7 @@ export function CartDrawer() {
                   onClick={handleWhatsAppOrder}
                   className="w-full py-3.5 px-4 rounded-full bg-white hover:bg-zinc-200 text-black font-extrabold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg active:scale-98"
                 >
-                  <MessageCircle className="w-4 h-4 fill-emerald-600 text-emerald-600" />
+                  <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
                   <span>Order Entire Bag on WhatsApp</span>
                 </button>
 
@@ -279,7 +280,7 @@ export function CartDrawer() {
                   onClick={handleSnapchatOrder}
                   className="w-full py-3 px-4 rounded-full airbnb-pill hover:bg-white/10 text-white font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 active:scale-98"
                 >
-                  {copiedSnapchat ? <Check className="w-4 h-4 text-white stroke-[2.5]" /> : <Camera className="w-4 h-4 text-yellow-400" />}
+                  {copiedSnapchat ? <Check className="w-4 h-4 text-white stroke-[2.5]" /> : <SnapchatLogo className="w-4 h-4 text-[#FFFC00]" />}
                   <span>{copiedSnapchat ? 'Bag Copied! Opening Snapchat...' : 'Order Bag via Snapchat'}</span>
                 </button>
               </div>

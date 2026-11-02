@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, MessageCircle, Send, AlertCircle } from 'lucide-react';
+import { X, Send, AlertCircle } from 'lucide-react';
+import { WhatsAppLogo } from '@/components/ui/BrandLogos';
 import { Product, JerseySize } from '@/types';
 import { formatCedis, generateWhatsAppMessage, buildWhatsAppUrl } from '@/lib/utils';
 import { useCart } from '@/lib/store/cart-context';
@@ -52,7 +53,7 @@ export function OrderWhatsAppModal({
         <div className="p-5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl apple-glass-pill text-white">
-              <MessageCircle className="w-4 h-4" />
+              <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
             </div>
             <div>
               <h3 className="font-heading text-white font-bold text-sm">Order on WhatsApp</h3>
@@ -186,7 +187,7 @@ export function OrderWhatsAppModal({
             onClick={handleSend}
             className="w-full py-3.5 px-4 rounded-xl bg-white hover:bg-zinc-200 text-black font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-glass"
           >
-            <Send className="w-4 h-4 text-black" />
+            <WhatsAppLogo className="w-4 h-4 text-black" />
             <span>Open WhatsApp & Send Order (GH₵ {total.toFixed(2)})</span>
           </button>
         </div>

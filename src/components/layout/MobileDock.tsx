@@ -7,9 +7,9 @@ import {
   Compass, 
   Shirt, 
   Search, 
-  ShoppingBag, 
-  MessageCircle 
+  ShoppingBag
 } from 'lucide-react';
+import { WhatsAppLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
 import { buildWhatsAppUrl } from '@/lib/utils';
 
@@ -60,7 +60,7 @@ export function MobileDock() {
     },
     {
       label: 'Concierge',
-      icon: MessageCircle,
+      icon: WhatsAppLogo,
       isActive: false,
       isButton: true,
       onClick: handleOpenWhatsApp,
@@ -84,7 +84,7 @@ export function MobileDock() {
                     item.isActive 
                       ? 'text-white' 
                       : item.isConcierge
-                      ? 'text-emerald-400'
+                      ? 'text-[#25D366]'
                       : 'text-zinc-400 hover:text-white'
                   }`} 
                 />

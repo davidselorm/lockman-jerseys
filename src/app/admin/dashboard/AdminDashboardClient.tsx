@@ -34,6 +34,7 @@ import {
   Flame,
   Layers
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { Product, Category, Order, StoreSettings, JerseySize, JerseyType } from '@/types';
 import { formatCedis } from '@/lib/utils';
 import { 
@@ -167,7 +168,7 @@ export function AdminDashboardClient({
       try {
         data = JSON.parse(text);
       } catch {
-        setDbMigrationLogs(prev => [...prev, `❌ Server response error (HTTP ${res.status}): ${text.slice(0, 100)}`]);
+        setDbMigrationLogs(prev => [...prev, `[Error] Server response error (HTTP ${res.status}): ${text.slice(0, 100)}`]);
         return;
       }
 
@@ -175,14 +176,14 @@ export function AdminDashboardClient({
         setDbMigrationLogs(data.logs);
       }
       if (data.success) {
-        setDbMigrationLogs(prev => [...prev, '✓ Database schema verified and clean!']);
+        setDbMigrationLogs(prev => [...prev, '[Success] Database schema verified and clean!']);
         await fetchDatabaseStatus();
         router.refresh();
       } else {
-        setDbMigrationLogs(prev => [...prev, `❌ Error: ${data.error || 'Migration failed'}`]);
+        setDbMigrationLogs(prev => [...prev, `[Error] ${data.error || 'Migration failed'}`]);
       }
     } catch (err: any) {
-      setDbMigrationLogs(prev => [...prev, `❌ Error: ${err.message}`]);
+      setDbMigrationLogs(prev => [...prev, `[Error] ${err.message}`]);
     } finally {
       setDbMigrating(false);
     }
@@ -1115,9 +1116,10 @@ export function AdminDashboardClient({
                   {productSearch && (
                     <button
                       onClick={() => setProductSearch('')}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-zinc-400 hover:text-white"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                      aria-label="Clear search"
                     >
-                      ✕
+                      <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
@@ -1465,7 +1467,7 @@ export function AdminDashboardClient({
                             rel="noopener noreferrer"
                             className="px-3.5 py-1.5 rounded-full bg-white text-black text-xs font-black flex items-center gap-1.5 hover:bg-zinc-200 transition-colors shadow-sm"
                           >
-                            <MessageCircle className="w-3.5 h-3.5 text-black" />
+                            <WhatsAppLogo className="w-3.5 h-3.5 text-black" />
                             <span>WhatsApp Customer</span>
                           </a>
 
@@ -1543,7 +1545,7 @@ export function AdminDashboardClient({
 
             <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C0C] border border-white/10 space-y-4">
               <div className="flex items-center gap-2.5 text-white">
-                <MessageCircle className="w-5 h-5 text-white" />
+                <WhatsAppLogo className="w-5 h-5 text-[#25D366]" />
                 <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
                   Customer WhatsApp Ordering Line
                 </h3>
@@ -1568,7 +1570,7 @@ export function AdminDashboardClient({
 
             <div className="p-6 sm:p-8 rounded-3xl bg-[#0C0C0C] border border-white/10 space-y-4">
               <div className="flex items-center gap-2.5 text-white">
-                <Camera className="w-5 h-5 text-white" />
+                <SnapchatLogo className="w-5 h-5 text-[#FFFC00]" />
                 <h3 className="text-sm font-extrabold text-white uppercase tracking-wider">
                   Snapchat Ordering Username
                 </h3>
