@@ -91,7 +91,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="font-semibold text-zinc-300 tracking-wide uppercase truncate max-w-[75%]">
                 {product.club_or_national}
               </span>
-              <span className="text-[11px] text-zinc-500 font-medium shrink-0">{product.season}</span>
+              <span className="text-[11px] text-zinc-400 font-medium shrink-0">{product.season}</span>
             </div>
 
             {/* Product Title */}
@@ -101,14 +101,13 @@ export function ProductCard({ product }: ProductCardProps) {
               </h3>
             </Link>
 
-            {/* Price (Airbnb Style) */}
-            <div className="mt-2 flex items-baseline gap-1.5">
+            {/* Price */}
+            <div className="mt-2 flex items-baseline gap-2">
               <span className="text-sm sm:text-base font-extrabold text-white">
                 {formatCedis(product.price)}
               </span>
-              <span className="text-xs text-zinc-400 font-normal">/ jersey</span>
-              {product.original_price && (
-                <span className="text-xs text-zinc-500 line-through ml-1">
+              {product.original_price && product.original_price > product.price && (
+                <span className="text-xs text-zinc-400 line-through">
                   {formatCedis(product.original_price)}
                 </span>
               )}
@@ -120,7 +119,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 <span className="font-medium">Size</span>
                 <span className="text-white font-bold">{selectedSize}</span>
               </div>
-              <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap">
+              <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                 {product.sizes.map((s) => {
                   const isSelected = selectedSize === s.size;
                   const isOut = s.stock === 0;
@@ -134,11 +133,11 @@ export function ProductCard({ product }: ProductCardProps) {
                         e.stopPropagation();
                         setSelectedSize(s.size);
                       }}
-                      className={`h-7 px-2.5 rounded-lg text-xs font-bold transition-all ${
+                      className={`h-7 min-w-7 px-2 rounded-lg text-xs font-bold shrink-0 transition-all ${
                         isSelected
                           ? 'bg-white text-black shadow-sm'
                           : isOut
-                          ? 'text-zinc-600 bg-white/[0.02] cursor-not-allowed line-through'
+                          ? 'text-zinc-500 bg-white/[0.02] cursor-not-allowed line-through'
                           : 'border border-white/15 text-zinc-300 hover:border-white/40 bg-white/[0.04]'
                       }`}
                     >
@@ -158,9 +157,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 onClick={handleOpenWhatsApp}
                 aria-label="Order on WhatsApp"
                 title="Order on WhatsApp"
-                className="airbnb-pill h-9 sm:h-10 px-2.5 sm:px-3 rounded-xl text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/10 active:scale-95 shrink-0"
+                className="airbnb-pill h-9 sm:h-10 px-2.5 sm:px-3 rounded-full text-white text-xs font-semibold transition-all flex items-center justify-center gap-1.5 hover:bg-white/10 active:scale-95 shrink-0"
               >
-                <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
+                <WhatsAppLogo className="w-4 h-4 text-white" />
                 <span className="hidden sm:inline">WhatsApp</span>
               </button>
 
@@ -168,11 +167,11 @@ export function ProductCard({ product }: ProductCardProps) {
                 type="button"
                 disabled={isOutOfStock || isCurrentSizeOut}
                 onClick={handleAddToCart}
-                className={`flex-1 h-9 sm:h-10 px-2 sm:px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 min-w-0 ${
+                className={`flex-1 h-9 sm:h-10 px-2.5 sm:px-4 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 active:scale-95 min-w-0 ${
                   added
                     ? 'bg-zinc-200 text-black'
                     : isOutOfStock || isCurrentSizeOut
-                    ? 'bg-white/5 text-zinc-600 cursor-not-allowed border border-white/5'
+                    ? 'bg-white/5 text-zinc-500 cursor-not-allowed border border-white/5'
                     : 'bg-white hover:bg-zinc-200 text-black shadow-sm'
                 }`}
               >
@@ -184,7 +183,8 @@ export function ProductCard({ product }: ProductCardProps) {
                 ) : (
                   <>
                     <ShoppingBag className="w-3.5 h-3.5 stroke-[2.5]" />
-                    <span className="truncate">Add to Bag</span>
+                    <span className="truncate hidden xs:inline sm:inline">Add to Bag</span>
+                    <span className="truncate xs:hidden sm:hidden">+Bag</span>
                   </>
                 )}
               </button>

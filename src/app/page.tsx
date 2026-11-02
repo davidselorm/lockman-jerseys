@@ -34,7 +34,7 @@ export default async function HomePage() {
   const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
 
   return (
-    <div className="space-y-10 sm:space-y-16 pb-20 sm:pb-28 overflow-hidden bg-black">
+    <div className="space-y-10 sm:space-y-16 pb-36 sm:pb-28 overflow-hidden bg-black">
 
       {/* 1. AIRBNB-INSPIRED HIGH-CONTRAST HERO SECTION */}
       <section className="relative pt-4 sm:pt-10 pb-8 sm:pb-16 border-b border-white/[0.08] overflow-hidden">

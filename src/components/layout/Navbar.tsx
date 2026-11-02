@@ -12,8 +12,11 @@ import {
   Grid, 
   Info, 
   PhoneCall, 
-  Home
+  Home,
+  Menu,
+  X
 } from 'lucide-react';
+import { WhatsAppLogo, SnapchatLogo } from '@/components/ui/BrandLogos';
 import { useCart } from '@/lib/store/cart-context';
 
 export function Navbar() {
@@ -21,9 +24,11 @@ export function Navbar() {
   const { totalItems, setIsOpen, storeSettings } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
+  const snapchatHandle = storeSettings?.snapchat_username || 'yawloqman';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +40,7 @@ export function Navbar() {
 
   useEffect(() => {
     setSearchOpen(false);
+    setMobileMenuOpen(false);
   }, [pathname]);
 
   const navLinks = [
@@ -161,6 +167,20 @@ export function Navbar() {
                   </span>
                 )}
               </Link>
+
+              {/* Mobile Hamburger Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(!mobileMenuOpen);
+                  if (searchOpen) setSearchOpen(false);
+                }}
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileMenuOpen}
+                className="md:hidden w-10 h-10 flex items-center justify-center rounded-full airbnb-pill text-zinc-300 hover:text-white active:scale-95 transition-all"
+              >
+                {mobileMenuOpen ? <X className="w-4 h-4 stroke-[2.5]" /> : <Menu className="w-4 h-4 stroke-[2.5]" />}
+              </button>
             </div>
           </div>
         </div>
@@ -187,6 +207,65 @@ export function Navbar() {
                 Search
               </button>
             </form>
+          </div>
+        )}
+
+        {/* Mobile Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-2xl px-4 py-5 animate-in slide-in-from-top-2 duration-200 max-h-[calc(100vh-5rem)] overflow-y-auto">
+            <nav className="flex flex-col gap-1.5">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
+                      isActive
+                        ? 'bg-white text-black font-bold shadow-md'
+                        : 'text-zinc-300 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{link.name}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Quick Contact & Channels */}
+            <div className="mt-5 pt-4 border-t border-white/[0.08] space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1 block">
+                Direct Channels
+              </span>
+              <a
+                href={`https://wa.me/${whatsappNumber}?text=Hi%20Lockman%20Jerseys,%20I'd%20like%20to%20inquire%20about%20kits`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-white/20 text-white text-xs font-bold transition-all"
+              >
+                <div className="flex items-center gap-2.5">
+                  <WhatsAppLogo className="w-4 h-4 text-[#25D366]" />
+                  <span>WhatsApp Hotline</span>
+                </div>
+                <span className="text-zinc-400 font-mono text-[11px]">+233 25 710 7980</span>
+              </a>
+
+              <a
+                href={`https://snapchat.com/t/${snapchatHandle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-white/20 text-white text-xs font-bold transition-all"
+              >
+                <div className="flex items-center gap-2.5">
+                  <SnapchatLogo className="w-4 h-4 text-[#FFFC00]" />
+                  <span>Snapchat Stories & DM</span>
+                </div>
+                <span className="text-zinc-400 font-mono text-[11px]">@{snapchatHandle}</span>
+              </a>
+            </div>
           </div>
         )}
       </header>

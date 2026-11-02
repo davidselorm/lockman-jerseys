@@ -1,10 +1,17 @@
 import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/lib/store/cart-context';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { WhatsAppFloatingButton } from '@/components/layout/WhatsAppFloatingButton';
 import { MobileDock } from '@/components/layout/MobileDock';
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+});
 
 export const metadata: Metadata = {
   title: 'LOCKMAN JERSEYS | Football Jerseys in Ghana',
@@ -22,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen bg-black text-white flex flex-col antialiased selection:bg-white selection:text-black">
+    <html lang="en" className={`dark ${plusJakartaSans.variable}`}>
+      <body className={`${plusJakartaSans.className} min-h-screen bg-black text-white flex flex-col antialiased selection:bg-white selection:text-black`}>
         <CartProvider>
           <Navbar />
           <main className="flex-1">{children}</main>

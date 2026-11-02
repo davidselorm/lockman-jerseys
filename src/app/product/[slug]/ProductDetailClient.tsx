@@ -52,15 +52,15 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
   const totalPrice = product.price * quantity;
 
   return (
-    <div className="bg-black min-h-screen py-6 sm:py-10 pb-28 md:pb-16">
+    <div className="bg-black min-h-screen py-6 sm:py-10 pb-36 sm:pb-32 md:pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         
         {/* Breadcrumbs */}
         <nav className="inline-flex items-center gap-1.5 sm:gap-2 text-xs text-zinc-400 airbnb-pill px-3.5 py-1.5 rounded-full overflow-hidden max-w-full">
           <Link href="/" className="hover:text-white transition-colors shrink-0">Home</Link>
-          <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
           <Link href="/shop" className="hover:text-white transition-colors shrink-0">Jerseys</Link>
-          <ChevronRight className="w-3.5 h-3.5 text-zinc-600 shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
           <span className="text-white font-bold truncate">{product.name}</span>
         </nav>
 
@@ -121,20 +121,19 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                 <span className="text-zinc-400 font-extrabold uppercase tracking-wider">
                   {product.club_or_national}
                 </span>
-                <span className="text-zinc-500 font-bold">{product.season}</span>
+                <span className="text-zinc-400 font-bold">{product.season}</span>
               </div>
               <h1 className="font-sans text-2xl sm:text-3xl font-extrabold text-white leading-tight">
                 {product.name}
               </h1>
               
-              {/* Price (Airbnb Style) */}
+              {/* Price */}
               <div className="flex items-baseline gap-2 sm:gap-3 pt-2">
                 <span className="text-2xl sm:text-3xl font-extrabold text-white">
                   {formatCedis(product.price)}
                 </span>
-                <span className="text-sm text-zinc-400 font-normal">/ jersey</span>
                 {product.original_price && (
-                  <span className="text-sm text-zinc-500 line-through ml-1">
+                  <span className="text-sm text-zinc-400 line-through ml-1">
                     {formatCedis(product.original_price)}
                   </span>
                 )}
@@ -268,11 +267,11 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
               
               <div className="grid grid-cols-2 gap-2 text-xs pt-1">
                 <div className="p-3 rounded-2xl airbnb-pill">
-                  <span className="text-[10px] text-zinc-500 block font-bold uppercase tracking-wider">Material</span>
+                  <span className="text-[10px] text-zinc-400 block font-bold uppercase tracking-wider">Material</span>
                   <span className="text-white font-semibold">100% Breathable Mesh</span>
                 </div>
                 <div className="p-3 rounded-2xl airbnb-pill">
-                  <span className="text-[10px] text-zinc-500 block font-bold uppercase tracking-wider">Fit</span>
+                  <span className="text-[10px] text-zinc-400 block font-bold uppercase tracking-wider">Fit</span>
                   <span className="text-white font-semibold">
                     {product.jersey_type === 'Player Version' ? 'Athletic Slim Fit' : 'Standard Regular Fit'}
                   </span>
