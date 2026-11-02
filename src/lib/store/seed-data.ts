@@ -58,7 +58,7 @@ export const INITIAL_STORE_SETTINGS: StoreSettings = {
   whatsapp_message_template: 'Hello LOCKMAN JERSEYS! I want to order the following:\n\n*Product:* {product_name}\n*Size:* {size}\n*Quantity:* {quantity}\n*Price:* GH₵{total}\n*Delivery City:* {city}\n\nPlease confirm availability and dispatch schedule.',
   
   // Snapchat settings (configurable in Admin Settings)
-  snapchat_username: 'lockman_jerseys',
+  snapchat_username: 'yawloqman',
   snapchat_instructions: '1. Tap "Order via Snapchat" to copy your order summary.\n2. Open Snapchat and find our official business profile.\n3. Paste the order summary directly into our chat for immediate confirmation and express delivery.',
   
   // Ghana Mobile Money (legacy fields kept for interface compatibility)

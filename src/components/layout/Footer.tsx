@@ -13,7 +13,7 @@ export function Footer() {
   const { storeSettings } = useCart();
 
   const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
-  const snapchatUsername = storeSettings?.snapchat_username || 'lockman_jerseys';
+  const snapchatUsername = storeSettings?.snapchat_username || 'yawloqman';
 
   return (
     <footer className="bg-black border-t border-white/10 text-zinc-400 text-xs pt-12 pb-28 md:pb-12">

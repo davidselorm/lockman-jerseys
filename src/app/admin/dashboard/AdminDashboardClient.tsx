@@ -81,6 +81,20 @@ export function AdminDashboardClient({
   const [orderStatusFilter, setOrderStatusFilter] = useState('all');
   const [productStockFilter, setProductStockFilter] = useState<'all' | 'in_stock' | 'out_of_stock'>('all');
 
+  // Manual Order Modal State
+  const [isManualOrderOpen, setIsManualOrderOpen] = useState(false);
+  const [manualCustomerName, setManualCustomerName] = useState('');
+  const [manualCustomerPhone, setManualCustomerPhone] = useState('');
+  const [manualDeliveryCity, setManualDeliveryCity] = useState('Accra Metro');
+  const [manualDeliveryAddress, setManualDeliveryAddress] = useState('');
+  const [manualChannel, setManualChannel] = useState<'whatsapp' | 'web' | 'snapchat'>('whatsapp');
+  const [manualPaymentMethod, setManualPaymentMethod] = useState('whatsapp');
+  const [manualOrderStatus, setManualOrderStatus] = useState<'pending' | 'processing' | 'shipped' | 'delivered'>('pending');
+  const [manualSelectedProductId, setManualSelectedProductId] = useState<string>('');
+  const [manualSelectedSize, setManualSelectedSize] = useState<JerseySize>('M');
+  const [manualQuantity, setManualQuantity] = useState(1);
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+
   // ========================================================
   // FORM STATES (Add / Edit Matchwear Kit)
   // ========================================================
@@ -450,6 +464,91 @@ export function AdminDashboardClient({
     await updateOrderStatus(orderId, status);
     setOrders(prev => prev.map(o => (o.id === orderId ? { ...o, order_status: status } : o)));
     showToast(`Order status updated to ${status}`);
+  };
+
+  const handleCreateManualOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const effectiveProductId = manualSelectedProductId || (products[0]?.id || '');
+    if (!effectiveProductId) {
+      alert('Please add a jersey product to inventory first');
+      return;
+    }
+    const chosenProduct = products.find(p => p.id === effectiveProductId);
+    if (!chosenProduct) {
+      alert('Selected jersey kit not found');
+      return;
+    }
+
+    setIsSubmittingOrder(true);
+    try {
+      const orderNumber = `LK-${Math.floor(100000 + Math.random() * 900000)}`;
+      const itemTotal = chosenProduct.price * manualQuantity;
+
+      const orderPayload = {
+        order_number: orderNumber,
+        customer_name: manualCustomerName.trim() || 'Direct Customer',
+        customer_phone: manualCustomerPhone.trim() || 'Pending',
+        delivery_city: manualDeliveryCity,
+        delivery_address: manualDeliveryAddress.trim() || `${manualDeliveryCity} Direct Delivery`,
+        total_amount: itemTotal,
+        payment_method: manualPaymentMethod,
+        order_status: manualOrderStatus,
+        order_channel: manualChannel,
+        items: [
+          {
+            product_id: chosenProduct.id,
+            product_name: chosenProduct.name,
+            size: manualSelectedSize,
+            quantity: manualQuantity,
+            unit_price: chosenProduct.price,
+            total_price: itemTotal,
+            image_url: chosenProduct.images?.[0] || null,
+          }
+        ]
+      };
+
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderPayload),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || 'Failed to record order');
+      }
+
+      const resJson = await res.json();
+      const newOrder: Order = resJson.order;
+
+      // Add to orders list
+      setOrders(prev => [newOrder, ...prev]);
+
+      // Decrement stock in local product state
+      setProducts(prev => prev.map(p => {
+        if (p.id !== chosenProduct.id) return p;
+        const newSizes = p.sizes.map(s => {
+          if (s.size === manualSelectedSize) {
+            return { ...s, stock: Math.max(0, s.stock - manualQuantity) };
+          }
+          return s;
+        });
+        const newTotal = newSizes.reduce((sum, s) => sum + s.stock, 0);
+        return { ...p, sizes: newSizes, total_stock: newTotal };
+      }));
+
+      // Reset form & close
+      setIsManualOrderOpen(false);
+      setManualCustomerName('');
+      setManualCustomerPhone('');
+      setManualDeliveryAddress('');
+      setManualQuantity(1);
+      showToast(`Order #${newOrder.order_number} recorded successfully!`);
+    } catch (err: any) {
+      alert(`Error creating order: ${err.message}`);
+    } finally {
+      setIsSubmittingOrder(false);
+    }
   };
 
   const handleSaveSettings = async (e: React.FormEvent) => {
@@ -1410,21 +1509,37 @@ export function AdminDashboardClient({
         {activeTab === 'orders' && (
           <div className="space-y-6">
             
-            {/* Status Filter Pills */}
-            <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-              {['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(status => (
-                <button
-                  key={status}
-                  onClick={() => setOrderStatusFilter(status)}
-                  className={`px-4 py-2 rounded-full text-xs font-extrabold uppercase font-mono transition-all whitespace-nowrap active:scale-95 ${
-                    orderStatusFilter === status
-                      ? 'bg-white text-black shadow-md'
-                      : 'bg-[#0C0C0C] text-zinc-400 hover:text-white border border-white/10'
-                  }`}
-                >
-                  {status} ({orders.filter(o => status === 'all' || o.order_status === status).length})
-                </button>
-              ))}
+            {/* Status Filter Pills & Manual Order Button */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+                {['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(status => (
+                  <button
+                    key={status}
+                    onClick={() => setOrderStatusFilter(status)}
+                    className={`px-4 py-2 rounded-full text-xs font-extrabold uppercase font-mono transition-all whitespace-nowrap active:scale-95 ${
+                      orderStatusFilter === status
+                        ? 'bg-white text-black shadow-md'
+                        : 'bg-[#0C0C0C] text-zinc-400 hover:text-white border border-white/10'
+                    }`}
+                  >
+                    {status} ({orders.filter(o => status === 'all' || o.order_status === status).length})
+                  </button>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (products.length > 0 && !manualSelectedProductId) {
+                    setManualSelectedProductId(products[0].id);
+                  }
+                  setIsManualOrderOpen(true);
+                }}
+                className="px-5 py-2.5 rounded-full bg-white text-black text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all shadow-md shrink-0 active:scale-95"
+              >
+                <Plus className="w-4 h-4 stroke-[2.5]" />
+                <span>Record Manual Order</span>
+              </button>
             </div>
 
             {/* Orders List */}
@@ -1582,7 +1697,7 @@ export function AdminDashboardClient({
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. lockman_jerseys"
+                  placeholder="e.g. yawloqman"
                   value={settings.snapchat_username}
                   onChange={(e) => setSettings({ ...settings, snapchat_username: e.target.value })}
                   className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
@@ -1772,6 +1887,249 @@ export function AdminDashboardClient({
                   </div>
                 </div>
               )}
+
+            </div>
+          </div>
+        )}
+
+        {/* MANUAL ORDER CREATION MODAL */}
+        {isManualOrderOpen && (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+            <div className="relative w-full max-w-lg bg-[#0C0C0C] border border-white/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+              
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-white font-extrabold text-base uppercase tracking-wider">
+                    Record Customer Order
+                  </h3>
+                  <p className="text-xs text-zinc-400 mt-0.5">
+                    Log an order from WhatsApp chat, phone call, or showroom walk-in.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsManualOrderOpen(false)}
+                  className="p-2 rounded-full bg-white/5 hover:bg-white text-zinc-400 hover:text-black transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateManualOrder} className="space-y-4">
+                {/* Kit Selection */}
+                <div>
+                  <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                    Select Jersey Kit *
+                  </label>
+                  <select
+                    value={manualSelectedProductId || (products[0]?.id || '')}
+                    onChange={(e) => {
+                      setManualSelectedProductId(e.target.value);
+                      const prod = products.find(p => p.id === e.target.value);
+                      if (prod && prod.sizes.length > 0) {
+                        setManualSelectedSize(prod.sizes[0].size);
+                      }
+                    }}
+                    required
+                    className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                  >
+                    {products.map(p => (
+                      <option key={p.id} value={p.id} className="bg-[#111111] text-white">
+                        {p.name} ({p.season}) — {formatCedis(p.price)} [{p.total_stock} in stock]
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Size & Quantity */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                      Size
+                    </label>
+                    <select
+                      value={manualSelectedSize}
+                      onChange={(e) => setManualSelectedSize(e.target.value as JerseySize)}
+                      className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    >
+                      {(() => {
+                        const prod = products.find(p => p.id === (manualSelectedProductId || products[0]?.id)) || products[0];
+                        if (!prod) return null;
+                        return prod.sizes.map(s => (
+                          <option key={s.size} value={s.size} className="bg-[#111111] text-white">
+                            Size {s.size} ({s.stock} left)
+                          </option>
+                        ));
+                      })()}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                      Quantity
+                    </label>
+                    <div className="flex items-center gap-2 bg-black border border-white/15 rounded-2xl px-3 py-2">
+                      <button
+                        type="button"
+                        onClick={() => setManualQuantity(Math.max(1, manualQuantity - 1))}
+                        className="text-zinc-400 hover:text-white font-mono text-base px-2"
+                      >
+                        -
+                      </button>
+                      <span className="flex-1 text-center font-mono font-bold text-white text-xs">
+                        {manualQuantity}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setManualQuantity(manualQuantity + 1)}
+                        className="text-zinc-400 hover:text-white font-mono text-base px-2"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Customer Details */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                      Customer Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Kwame Mensah"
+                      value={manualCustomerName}
+                      onChange={(e) => setManualCustomerName(e.target.value)}
+                      className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                      Phone Number
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 024 123 4567"
+                      value={manualCustomerPhone}
+                      onChange={(e) => setManualCustomerPhone(e.target.value)}
+                      className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* City & Address */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                      Delivery City
+                    </label>
+                    <select
+                      value={manualDeliveryCity}
+                      onChange={(e) => setManualDeliveryCity(e.target.value)}
+                      className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    >
+                      <option value="Accra Metro" className="bg-[#111111] text-white">Accra Metro</option>
+                      <option value="Kumasi" className="bg-[#111111] text-white">Kumasi</option>
+                      <option value="Takoradi" className="bg-[#111111] text-white">Takoradi</option>
+                      <option value="Tema" className="bg-[#111111] text-white">Tema</option>
+                      <option value="Cape Coast" className="bg-[#111111] text-white">Cape Coast</option>
+                      <option value="Tamale" className="bg-[#111111] text-white">Tamale</option>
+                      <option value="Nationwide Region" className="bg-[#111111] text-white">Other Region</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[11px] font-mono uppercase text-zinc-400 block mb-1.5">
+                      Delivery Address / Note
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. East Legon, near ANC Mall"
+                      value={manualDeliveryAddress}
+                      onChange={(e) => setManualDeliveryAddress(e.target.value)}
+                      className="w-full px-4 py-3 bg-black border border-white/15 rounded-2xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Channel, Payment & Status */}
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1">
+                      Channel
+                    </label>
+                    <select
+                      value={manualChannel}
+                      onChange={(e) => setManualChannel(e.target.value as any)}
+                      className="w-full px-3 py-2.5 bg-black border border-white/15 rounded-xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    >
+                      <option value="whatsapp" className="bg-[#111111] text-white">WhatsApp</option>
+                      <option value="web" className="bg-[#111111] text-white">Walk-in / Phone</option>
+                      <option value="snapchat" className="bg-[#111111] text-white">Snapchat</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1">
+                      Payment
+                    </label>
+                    <select
+                      value={manualPaymentMethod}
+                      onChange={(e) => setManualPaymentMethod(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-black border border-white/15 rounded-xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    >
+                      <option value="whatsapp" className="bg-[#111111] text-white">WhatsApp</option>
+                      <option value="cash_on_delivery" className="bg-[#111111] text-white">Cash</option>
+                      <option value="momo_mtn" className="bg-[#111111] text-white">MTN MoMo</option>
+                      <option value="momo_telecel" className="bg-[#111111] text-white">Telecel</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-mono uppercase text-zinc-400 block mb-1">
+                      Status
+                    </label>
+                    <select
+                      value={manualOrderStatus}
+                      onChange={(e) => setManualOrderStatus(e.target.value as any)}
+                      className="w-full px-3 py-2.5 bg-black border border-white/15 rounded-xl text-white text-xs font-mono focus:outline-none focus:border-white transition-all"
+                    >
+                      <option value="pending" className="bg-[#111111] text-white">Pending</option>
+                      <option value="processing" className="bg-[#111111] text-white">Processing</option>
+                      <option value="shipped" className="bg-[#111111] text-white">Shipped</option>
+                      <option value="delivered" className="bg-[#111111] text-white">Delivered</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Total & Action */}
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-zinc-400 block">Total Price:</span>
+                    <span className="text-white font-mono font-black text-sm">
+                      {(() => {
+                        const prod = products.find(p => p.id === (manualSelectedProductId || products[0]?.id)) || products[0];
+                        return prod ? formatCedis(prod.price * manualQuantity) : 'GH₵ 0.00';
+                      })()}
+                    </span>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setIsManualOrderOpen(false)}
+                      className="px-4 py-2.5 rounded-full bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-xs font-bold transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSubmittingOrder}
+                      className="px-6 py-2.5 rounded-full bg-white hover:bg-zinc-200 text-black text-xs font-black uppercase tracking-wider transition-all shadow-md active:scale-95 disabled:opacity-50"
+                    >
+                      {isSubmittingOrder ? 'Saving...' : 'Save & Record Order'}
+                    </button>
+                  </div>
+                </div>
+              </form>
 
             </div>
           </div>

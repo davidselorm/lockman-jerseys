@@ -45,10 +45,6 @@ export function generateWhatsAppMessage(params: {
   msg += `*Total Amount:* GH₵ ${totalPrice.toFixed(2)}\n`;
   msg += `*Delivery Location:* ${city}\n\n`;
 
-  const absImage = resolveAbsoluteImageUrl(imageUrl);
-  if (absImage) {
-    msg += `*Kit Photo:* ${absImage}\n`;
-  }
   if (productSlug) {
     const baseUrl = typeof window !== 'undefined' && window.location.origin 
       ? window.location.origin 
@@ -83,12 +79,8 @@ export function generateSnapchatOrderSummary(params: {
   imageUrl?: string;
   productSlug?: string;
 }): string {
-  const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber, imageUrl, productSlug } = params;
-  const absImage = resolveAbsoluteImageUrl(imageUrl);
+  const { productName, size, quantity, totalPrice, city = 'Accra', orderNumber, productSlug } = params;
   let text = `*LOCKMAN JERSEYS ORDER*\n${orderNumber ? `Ref: #${orderNumber}\n` : ''}Item: ${productName}\nSize: ${size} | Qty: ${quantity}\nTotal: GH₵ ${totalPrice.toFixed(2)}\nDelivery: ${city}\n`;
-  if (absImage) {
-    text += `Kit Photo: ${absImage}\n`;
-  }
   if (productSlug) {
     const baseUrl = typeof window !== 'undefined' && window.location.origin 
       ? window.location.origin 

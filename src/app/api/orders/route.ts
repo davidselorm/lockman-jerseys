@@ -15,18 +15,28 @@ export async function POST(request: Request) {
       total_amount,
       payment_method,
       order_channel,
+      order_status,
       items,
       initial_payment_reference,
+      order_number,
     } = body;
 
-    if (!customer_name || !customer_phone || !delivery_address || !items || !Array.isArray(items) || items.length === 0) {
+    if (!items || !Array.isArray(items) || items.length === 0) {
       return NextResponse.json(
-        { error: 'Missing required order fields or items' },
+        { error: 'Order must contain at least one jersey item' },
         { status: 400 }
       );
     }
 
-    const orderNumber = `LK-${Date.now().toString().slice(-6)}`;
+    const channel = (order_channel && ['web', 'whatsapp', 'snapchat'].includes(order_channel)) ? order_channel : 'web';
+    const custName = customer_name && customer_name.trim() ? customer_name.trim() : (channel === 'whatsapp' ? 'WhatsApp Lead' : (channel === 'snapchat' ? 'Snapchat Lead' : 'Direct Customer'));
+    const custPhone = customer_phone && customer_phone.trim() ? customer_phone.trim() : 'Pending via Contact';
+    const city = delivery_city || 'Accra';
+    const delivAddress = delivery_address && delivery_address.trim() ? delivery_address.trim() : `${city} Delivery`;
+    const orderNumber = order_number && order_number.trim() ? order_number.trim().toUpperCase() : `LK-${Date.now().toString().slice(-6)}`;
+    const status = order_status && ['pending', 'processing', 'shipped', 'delivered', 'cancelled'].includes(order_status) ? order_status : 'pending';
+    const paymentMethod = payment_method || (channel === 'whatsapp' ? 'whatsapp' : (channel === 'snapchat' ? 'snapchat' : 'cash_on_delivery'));
+    const finalTotal = total_amount ? Number(total_amount) : items.reduce((sum: number, it: any) => sum + (Number(it.total_price) || (Number(it.unit_price) * (Number(it.quantity) || 1))), 0);
 
     if (isSupabaseConfigured()) {
       const supabase = createAdminClient() || createClient();
@@ -39,16 +49,16 @@ export async function POST(request: Request) {
         .from('orders')
         .insert({
           order_number: orderNumber,
-          customer_name: customer_name.trim(),
-          customer_phone: customer_phone.trim(),
+          customer_name: custName,
+          customer_phone: custPhone,
           customer_email: customer_email?.trim() || null,
-          delivery_address: delivery_address.trim(),
-          delivery_city: delivery_city || 'Accra',
+          delivery_address: delivAddress,
+          delivery_city: city,
           delivery_notes: delivery_notes?.trim() || null,
-          total_amount: Number(total_amount),
-          payment_method: payment_method || 'momo_mtn',
-          order_status: 'pending',
-          order_channel: order_channel || 'web',
+          total_amount: finalTotal,
+          payment_method: paymentMethod,
+          order_status: status,
+          order_channel: channel,
         })
         .select()
         .single();
@@ -149,24 +159,24 @@ export async function POST(request: Request) {
     const fallbackOrder: Order = {
       id: `order-${Date.now()}`,
       order_number: orderNumber,
-      customer_name: customer_name.trim(),
-      customer_phone: customer_phone.trim(),
+      customer_name: custName,
+      customer_phone: custPhone,
       customer_email: customer_email?.trim(),
-      delivery_address: delivery_address.trim(),
-      delivery_city: delivery_city || 'Accra',
+      delivery_address: delivAddress,
+      delivery_city: city,
       delivery_notes: delivery_notes?.trim(),
-      total_amount: Number(total_amount),
-      payment_method: payment_method || 'momo_mtn',
-      order_status: 'pending',
-      order_channel: order_channel || 'web',
+      total_amount: finalTotal,
+      payment_method: paymentMethod,
+      order_status: status,
+      order_channel: channel,
       items,
       created_at: new Date().toISOString(),
       payment: initial_payment_reference ? {
         id: `pay-${Date.now()}`,
         order_id: `order-${Date.now()}`,
-        payment_method: payment_method || 'momo_mtn',
+        payment_method: paymentMethod,
         payment_reference: initial_payment_reference.trim(),
-        amount: Number(total_amount),
+        amount: finalTotal,
         status: 'submitted',
         created_at: new Date().toISOString(),
       } : undefined,

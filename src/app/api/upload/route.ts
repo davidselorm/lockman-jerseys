@@ -1,13 +1,23 @@
 import { NextResponse } from 'next/server';
+import { getAdminSession } from '@/lib/auth/admin-auth';
 import { createAdminClient, createClient, isSupabaseConfigured } from '@/lib/supabase/client';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
 
 export async function POST(request: Request) {
   try {
+    // 1. Enforce admin authentication
+    const session = await getAdminSession();
+    if (!session.authenticated) {
+      return NextResponse.json({ error: 'Unauthorized: Admin authentication required' }, { status: 401 });
+    }
+
     const contentType = request.headers.get('content-type') || '';
     let buffer: Buffer | null = null;
     let fileName = `upload-${Date.now()}`;
     let mimeType = 'image/jpeg';
-    let bucket = 'proofs';
+    let bucket = 'jerseys';
 
     if (contentType.includes('application/json')) {
       const body = await request.json();
@@ -56,6 +66,14 @@ export async function POST(request: Request) {
 
     if (!buffer) {
       return NextResponse.json({ error: 'Empty file payload' }, { status: 400 });
+    }
+
+    if (buffer.length > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: 'File size exceeds maximum allowed limit (5MB)' }, { status: 400 });
+    }
+
+    if (!ALLOWED_MIME_TYPES.includes(mimeType.toLowerCase())) {
+      return NextResponse.json({ error: 'Invalid file format. Allowed formats: JPEG, PNG, WebP, AVIF' }, { status: 400 });
     }
 
     // If Supabase Storage is configured, upload to bucket

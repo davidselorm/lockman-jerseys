@@ -24,6 +24,7 @@ export function OrderWhatsAppModal({
   const [size, setSize] = useState<JerseySize>(selectedSize);
   const [quantity, setQuantity] = useState(1);
   const [city, setCity] = useState('Accra');
+  const [orderRef] = useState(() => `LK-${Math.floor(100000 + Math.random() * 900000)}`);
 
   if (!isOpen) return null;
 
@@ -36,11 +37,36 @@ export function OrderWhatsAppModal({
     quantity,
     totalPrice: total,
     city,
-    imageUrl: product.images?.[0],
+    orderNumber: orderRef,
     productSlug: product.slug,
   });
 
   const handleSend = () => {
+    // Record lead in Supabase orders
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_number: orderRef,
+        customer_name: `WhatsApp Lead (${city})`,
+        customer_phone: 'Pending via WhatsApp',
+        delivery_city: city,
+        delivery_address: `${city} (WhatsApp Order)`,
+        total_amount: total,
+        payment_method: 'whatsapp',
+        order_channel: 'whatsapp',
+        items: [{
+          product_id: product.id,
+          product_name: product.name,
+          size,
+          quantity,
+          unit_price: product.price,
+          total_price: total,
+          image_url: product.images?.[0] || null,
+        }],
+      }),
+    }).catch(err => console.warn('Order sync notice:', err));
+
     const activeNumber = phoneNumber || '233257107980';
     const url = buildWhatsAppUrl(activeNumber, previewMessage);
     window.open(url, '_blank');

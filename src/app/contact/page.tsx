@@ -22,7 +22,7 @@ export default function ContactPage() {
 
   const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
   const phoneDisplay = storeSettings?.phone_display || '+233 25 710 7980';
-  const snapchatUser = storeSettings?.snapchat_username || 'lockman_jerseys';
+  const snapchatUser = storeSettings?.snapchat_username || 'yawloqman';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

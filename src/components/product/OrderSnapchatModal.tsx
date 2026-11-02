@@ -25,11 +25,12 @@ export function OrderSnapchatModal({
   const [quantity, setQuantity] = useState(1);
   const [city, setCity] = useState('Accra');
   const [copied, setCopied] = useState(false);
+  const [orderRef] = useState(() => `LK-${Math.floor(100000 + Math.random() * 900000)}`);
 
   if (!isOpen) return null;
 
   const total = product.price * quantity;
-  const username = storeSettings?.snapchat_username || '';
+  const username = storeSettings?.snapchat_username || 'yawloqman';
 
   const orderSummary = generateSnapchatOrderSummary({
     productName: product.name,
@@ -37,7 +38,7 @@ export function OrderSnapchatModal({
     quantity,
     totalPrice: total,
     city,
-    imageUrl: product.images?.[0],
+    orderNumber: orderRef,
     productSlug: product.slug,
   });
 
@@ -49,6 +50,31 @@ export function OrderSnapchatModal({
 
   const handleOpenSnapchat = () => {
     handleCopy();
+    // Record lead in Supabase
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_number: orderRef,
+        customer_name: `Snapchat Lead (${city})`,
+        customer_phone: 'Pending via Snapchat',
+        delivery_city: city,
+        delivery_address: `${city} (Snapchat Order)`,
+        total_amount: total,
+        payment_method: 'snapchat',
+        order_channel: 'snapchat',
+        items: [{
+          product_id: product.id,
+          product_name: product.name,
+          size,
+          quantity,
+          unit_price: product.price,
+          total_price: total,
+          image_url: product.images?.[0] || null,
+        }],
+      }),
+    }).catch(err => console.warn('Order sync notice:', err));
+
     if (username) {
       window.open(buildSnapchatUrl(username), '_blank');
     }

@@ -38,7 +38,7 @@ export default function CartPage() {
   const [copiedSnapchat, setCopiedSnapchat] = useState(false);
 
   const whatsappNumber = storeSettings?.whatsapp_number || '233257107980';
-  const snapchatUsername = storeSettings?.snapchat_username || 'lockman_jerseys';
+  const snapchatUsername = storeSettings?.snapchat_username || 'yawloqman';
   const freeShippingThreshold = storeSettings?.free_delivery_threshold || 1200;
   const freeShippingDiff = Math.max(0, freeShippingThreshold - subtotal);
   const freeShippingPercent = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
@@ -46,16 +46,45 @@ export default function CartPage() {
   const handleWhatsAppOrder = () => {
     if (items.length === 0) return;
     const activeNumber = whatsappNumber || '233257107980';
+    const orderNumber = `LK-${Math.floor(100000 + Math.random() * 900000)}`;
+    const baseUrl = typeof window !== 'undefined' && window.location.origin 
+      ? window.location.origin 
+      : 'https://lockmanjerseys.vercel.app';
+
+    // Record order in Supabase
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_number: orderNumber,
+        customer_name: `WhatsApp Bag Customer (${deliveryCity})`,
+        customer_phone: 'Pending via WhatsApp',
+        delivery_city: deliveryCity,
+        delivery_address: deliveryCity === 'Accra' ? 'Accra Metro' : 'Outside Accra (Nationwide)',
+        total_amount: total,
+        payment_method: 'whatsapp',
+        order_channel: 'whatsapp',
+        items: items.map(item => ({
+          product_id: item.product.id,
+          product_name: item.product.name,
+          size: item.selectedSize,
+          quantity: item.quantity,
+          unit_price: item.product.price,
+          total_price: item.product.price * item.quantity,
+          image_url: item.product.images?.[0] || null,
+        })),
+      }),
+    }).catch(err => console.warn('Order sync notice:', err));
 
     let msg = `*NEW ORDER - LOCKMAN JERSEYS*\n\n`;
+    msg += `*Order Reference:* #${orderNumber}\n\n`;
     items.forEach((item, index) => {
       msg += `${index + 1}. *${item.product.name}*\n`;
       msg += `   • Size: ${item.selectedSize}\n`;
       msg += `   • Qty: ${item.quantity}\n`;
       msg += `   • Price: GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;
-      const absImg = resolveAbsoluteImageUrl(item.product.images?.[0]);
-      if (absImg) {
-        msg += `   • Kit Photo: ${absImg}\n`;
+      if (item.product.slug) {
+        msg += `   • Link: ${baseUrl}/product/${item.product.slug}\n`;
       }
       msg += `\n`;
     });
@@ -69,10 +98,43 @@ export default function CartPage() {
 
   const handleSnapchatOrder = () => {
     if (items.length === 0) return;
+    const snapOrderNumber = `LK-${Math.floor(100000 + Math.random() * 900000)}`;
+    const baseUrl = typeof window !== 'undefined' && window.location.origin 
+      ? window.location.origin 
+      : 'https://lockmanjerseys.vercel.app';
+
+    // Record order in Supabase
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_number: snapOrderNumber,
+        customer_name: `Snapchat Bag Customer (${deliveryCity})`,
+        customer_phone: 'Pending via Snapchat',
+        delivery_city: deliveryCity,
+        delivery_address: deliveryCity === 'Accra' ? 'Accra Metro' : 'Outside Accra (Nationwide)',
+        total_amount: total,
+        payment_method: 'snapchat',
+        order_channel: 'snapchat',
+        items: items.map(item => ({
+          product_id: item.product.id,
+          product_name: item.product.name,
+          size: item.selectedSize,
+          quantity: item.quantity,
+          unit_price: item.product.price,
+          total_price: item.product.price * item.quantity,
+          image_url: item.product.images?.[0] || null,
+        })),
+      }),
+    }).catch(err => console.warn('Order sync notice:', err));
 
     let text = `*LOCKMAN JERSEYS BAG ORDER*\n\n`;
+    text += `*Order Reference:* #${snapOrderNumber}\n\n`;
     items.forEach((item, index) => {
       text += `${index + 1}. ${item.product.name} [Size: ${item.selectedSize}, Qty: ${item.quantity}] - GH₵ ${(item.product.price * item.quantity).toFixed(2)}\n`;
+      if (item.product.slug) {
+        text += `   Link: ${baseUrl}/product/${item.product.slug}\n`;
+      }
     });
     text += `\nDelivery: ${deliveryCity === 'Accra' ? 'Accra Metro' : 'Nationwide'}\n`;
     text += `Total: GH₵ ${total.toFixed(2)}\n\n`;
